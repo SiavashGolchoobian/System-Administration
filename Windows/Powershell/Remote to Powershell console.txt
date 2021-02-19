@@ -1,0 +1,32 @@
+Preuisites (Enabaling PSRemote on clients):
+	Enable-PSRemoting -Force
+
+Samples:
+Enter-PSSession -ComputerName wincore2019_e19 -Credential lab\siavash
+Get-PSSession			#Return all opened sessions
+Disconnect-PSSession	#disconnects a PowerShell session ("PSSession"), such as one started by using the New-PSSession
+Remove-PSSession		#closes PowerShell sessions (PSSessions) in the current session
+Exit-PSSession			#ends interactive sessions that you started by using the Enter-PSSession
+Get-PSSession | Disconnect-PSSession | Remove-PSSession		#Close every sessions
+OR
+
+$session = New-PSSession -ComputerName <Nano Server IP address> -Credential <An Administrator account on the system>
+Enter-PSSession $session
+
+OR
+
+$session = New-PSSession -ComputerName <Nano Server IP address> -Credential <An Administrator account on the system>
+Copy-Item c:\myfile.zip c:\ -ToSession $session
+
+OR
+
+$mySession=New-PSSession -ComputerName "wincore2019_e19", "wincore2019_dc", "azuredevops" -Credential lab\siavash
+Invoke-Command -Session $mySession -ScriptBlock { COMMAND }
+Invoke-Command -Session $mySession -ScriptBlock { Get-ChildItem C:\ }
+Invoke-Command -Session $mySession -ScriptBlock {Stop-Computer}
+Invoke-Command -Session $mySession {$h = Get-HotFix}
+
+OR
+
+Invoke-Command -Session $mySession -ScriptBlock { $cred = Get-Credential -Credential lab\siavash; New-PSDrive -Name "S" -Root "\\Wincore2019_DC\SharedFolder" -Persist -PSProvider "FileSystem" -Credential $cred }
+Invoke-Command -Session $mySession -ScriptBlock { net use }

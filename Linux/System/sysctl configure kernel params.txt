@@ -1,0 +1,18 @@
+Syntax:
+	sysctl [options] variable[=value]
+
+options:
+	-n				Disable printing of the key name when printing the key values
+	-e				This options use to ignore unknown errors related to unknown keys
+	-w				Use this option when you want to change a sysctl settings
+	-p <filename>	Loads in sysctl settings from the file specified in <filename> or a default loads from /etc/sysctl.conf if no filename is given		
+	-a				Dsplays all values currently available
+
+WHEN USING -w to set a variable, for persisting this change, you should also goto /etc/sysctl.conf and append/modify same key and value in this file, or also you can goto /etc/sysctl.d/ directory and create a new file and put this key and it's value in this file
+
+example:
+	#Show kernel.hostname key value
+	sysctl kernel.hostname
+	
+	#To preventing from SYN attack
+	sysctl -w net.ip4.tcp_syncoockies=1

@@ -1,0 +1,106 @@
+Disk
+-----
+Under Linux, each disk is given its own device name. The device files are stored under the "/dev" directory.
+	1-Hard disks start with the name sdX, where X can range from a through z, with each letter representing a physical block device.
+	2-Depending on the implementation/driver, virtual block devices start with names like vdX.
+
+Partition
+---------
+When partitions are created, corresponding device files are created. They take the form of /dev/sdXY (or /dev/vdXY), where X is the device letter (as described in the preceding paragraph) and Y is the partition number.
+
+Commands
+---------
+lsblk				list block devices
+fdsik				manage disk and partitions
+	-g 				create new GPT partition
+	-n 				create new MBR partition
+	-p 				show disk information
+	-w 				apply fdisk changes
+	-q 				quit without any changes
+parted				Partitioning physical disk
+partprobe			Inform OS from disk changes
+
+=================================================== Actions
+lsblk
+---------------
+show you all your disks, partitins and lvm's
+
+fdisk (Disk Partitioning)
+---------------
+fdisk -l											Show all storage devices and disks information
+fdisk <physical device/disk address>				Managing physical raw disk
+		-g											initializing disk as GPT
+		-n											create new partition over this disk
+		1											create partition number 1 on this new partition process
+		<ENTER>										start first sector according to default values
+		<ENTER> or +<size>M|G						assigne whole size of disk to this partition (<ENTER>) or assign only specified <size> (in MB or GB scale) from whole disk to this partition
+		-p											show selected disk information
+		-w											save changes and exit
+		
+Creating file system (Formating logical volume)
+-----------------------------------------------
+mkfs -t ext4 <partition path>
+mkfs -t xfs <partition path>
+mkfs.xfs <partition path>
+mkfs -t ext4 /dev/sdb1
+mkfs.xfs /dev/sdb1
+
+resize2fs
+---------------
+resize2fs <partition path>
+
+mounting formatted LV to a folder
+---------------------------------
+mkdir <dir>
+mount <partition path> <dir>
+
+permanent disk attachment via fstab
+---------------------------------
+#fstab file for auto mounting devices on startup
+The /etc/fstab file is a configuration file that mount canuse. This file contains a list of all partitions known to the system. During the boot process, this list is read and the items in it are automatically mounted with the options specified therein
+To see /dev/sdb1 block device’s UUID (Universally Unique Identifier) run:
+	blkid /dev/sdb1
+To modify fstab file:
+	echo 'UUID=ea8b08a4-3e9f-4482-83e9-c5f03b9f05d6 /data xfs defaults 1 1' >> /etc/fstab
+	OR
+	nano /etc/fstab
+	fstab file format is like below:
+	/dev/device	UUID									/dir/to/mount	fstype	options		dump		fsck
+	-----------------------------------------			-------------	------	----------	-------		---------
+	UUID=ea8b08a4-3e9f-4482-83e9-c5f03b9f05d6			/data			xfs		defaults		0			0
+
+Expanding Partition without LVM technology (Keep in mind fdsik does not delete any data, it only changes MBR or GPT information)
+---------------------------------
+#Solution 1:
+	1-Enabling root user on ubuntu
+		sudo passwd root
+	2-login with root user
+		su - root
+	3-Force extended device to detect new physical disk resize by root user permission (else you would get permission denied error), replace sdb with your device:
+		echo 1 > /sys/class/block/sdb/device/rescan
+	4-fdisk <physical device/disk address>
+		-d												delete your partition
+		<number>										select your partition number to delete
+		-n												create new partition over this disk
+		<number>										set your previousely partition number or new one
+		<ENTER>											you should set First sector exactly as previous settings, else you would loose all of your data
+		<ENTER> or +<size>M|G							Enter new partition size, assigne whole size of disk to this partition (<ENTER>) or assign only specified <size> (in MB or GB scale) from whole disk to this partition
+		N												do not allow fdisk to remove your partition signature, else you will loose all of your data
+		w												Apply changes and exit
+	5-fsck <partition path>								Checkdisk (This step is optional and not required, but it's better to this step, also for doing this step you should unmount your disk from related folders)
+	6-resize2fs <partition path>							Expand disk to it's new size
+	7-Re-disabling(locking) root user on ubuntu
+		sudo usermod -p '!' root
+#Solution 2 (https://www.codenotary.com/blog/enlarge-a-disk-and-partition-of-any-linux-vm-without-a-reboot/):
+	1-Enabling root user on ubuntu
+		sudo passwd root
+	2-login with root user
+		su - root
+	3-Force extended device to detect new physical disk resize by root user permission (else you would get permission denied error), replace sdb with your device:
+		echo 1 > /sys/class/block/sdb/device/rescan
+	4-Typically fdisk was the tool of choice for the first step and a utility like partprobe (or a reboot) for the second step. But things changed and you can use a great software called growpart. growpart is part of the cloud-utils-package, and should be available in your distro's repositories, in case its not already installed with your OS. Debian or Ubuntu:
+		sudo apt-get install -y cloud-utils
+	5-With growpart, enlarging the partition to maximum size and informing the kernel of the changed partition size is a one-liner (The first parameter is the disk device, the second parameter is the number of the partition to resize. After running growpart, your disks look like this):
+		growpart /dev/sdb 1
+	6-Re-disabling(locking) root user on ubuntu
+		sudo usermod -p '!' root

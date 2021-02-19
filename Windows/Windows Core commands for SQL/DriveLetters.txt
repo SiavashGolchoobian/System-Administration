@@ -1,0 +1,48 @@
+-----Online a Disk (removing default readonly state from disk and online it):
+diskpart
+>list disk
+>select disk 2
+>attributes disk clear readonly
+>online disk
+
+-----Initialize a Disk (Convert disk to GPT and Create whole disk as a single partition and format that partition as a 4k volume):
+diskpart
+>list disk
+>select disk 2
+>convert gpt
+>create partition primary
+>format quick fs=ntfs label="SQL Disk Host" unit=4k
+	OR
+>format quick fs=ntfs label="SQL Disk Host" unit=64k
+
+-----Assigne letter or mount point to partition\volume
+diskpart
+>list volume
+>select volume 2
+>assign letter=F		--Assign new letter to disk
+>assign mount=<path>	--Assign an empty folder to disk (folder should be existed)
+>remove letter=D		--Remove letter from disk
+
+-----Rename volume lable
+label.exe /MP E:\TempdbData01 SQL Tempdata 01
+
+-----Extend a volume size to maximum allowed size
+diskpart
+>list volume
+>select volume 2
+>extend
+
+-----All together
+'Pagefile','SqlBinary','Data01','Data02','Log01','TempdbData01','TempdbData02','TempdbData03','TempdbData04','TempdbLog01' | % {New-Item -Path F:\ -Name "$_" -ItemType 'Directory'}
+
+diskpart
+list disk
+select disk 2
+attributes disk clear readonly
+online disk
+convert gpt
+create partition primary
+format quick fs=ntfs label="SQL Data 01" unit=64k
+list volume
+select volume 3
+assign mount=<path>

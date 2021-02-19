@@ -1,0 +1,33 @@
+--to update packages, run the apt command or apt-get command:
+sudo apt update && sudo apt upgrade
+
+--To get list of updateable apt:
+sudo apt list --upgradable
+
+--tasksel shows all available tasks and allows to user to select ones to install
+sudo apt install tasksel
+
+--Run tasksel as follows:
+sudo tasksel
+--to Install GNOME desktop from tasksel Select "Ubuntu Desktop" or sudo tasksel install ubuntu-desktop
+
+--Open GNOME desktop
+systemctl status gdm
+sudo service gdm3 start
+
+--How to install downloaded package
+	--swith to root account
+su
+	--go to downloaded file location and type:
+rpm -Uvh filename
+
+-------------------
+cat		--view file content
+ls [l,s]	--list
+du		--list
+echo		--print to output
+env		--show all defined shell variables, variable save on ~/.bachrc and /etc/profile
+
+--Source:
+https://www.cyberciti.biz/faq/ubuntu-linux-install-gnome-desktop-on-server/
+https://www.tecmint.com/initial-ubuntu-server-setup-guide/

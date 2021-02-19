@@ -1,0 +1,57 @@
+--Update the Repositories
+sudo apt update
+sudo apt upgrade
+sudo apt-get update
+
+--Run the upgrade, The “dist-upgrade” switch asks Ubuntu to handle any dependencies intelligently. That is, if a particular software package is dependent on another software package to run, this command will make sure that the second package is upgraded before upgrading the first one. This method is a safe way to upgrade your Ubuntu Linux kernel. The kernel updates accessible through this utility have been tested and verified to work with your version of Ubuntu.
+sudo apt-get dist-upgrade
+
+--list all installed packages on Ubuntu
+apt list --installed
+ 
+--to list or find out if a specific package installed or not
+apt list -a pkgNameHere
+
+----to list or find out if a specific package(s) with a specified pattern names installed or not
+apt list --installed pattern
+apt list --installed x*
+
+--To display a list of packages satisfying certain criteria such as show matching apache2 packages, run :
+apt list apache
+
+--list all software packages on Ubuntu Linux available for us:
+apt list
+
+--You might want to use the grep command/egrep command to filter out:
+apt list | grep nginx
+
+--Download package from internet connected machine and install it in offline mode on other machines:
+	--===Solution #1: Download package file from known repository file server
+		wget -O ~/Downloads/ppp_2.4.7-1+4_amd64.deb http://ftp.us.debian.org/debian/pool/main/p/ppp/ppp_2.4.7-1+4_amd64.deb
+
+	--===Solution #2: Download package without dependent packages (you can finde downloaded file on current directory or at /var/cache/apt/archives)
+		#to prevent this error "couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)" run bellow command for once
+		sudo mkdir /download
+		sudo chown _apt /download
+		sudo chown _apt /var/lib/update-notifier/package-data-downloads/partial/
+		
+		#now download your package
+		sudo apt-get download <packageName>
+		sudo apt-get download <packageName> -o=dir::cache=/download
+	
+	--===Solution #3: Download package and it dependent packages
+		--Install apt-rdepends package on internet connected machine:
+		sudo apt install apt-rdepends
+		
+		--Download <packageName> and all of it's depndencies:
+		apt download $(apt-rdepends <packageName> | grep -v "^ ")
+	
+--Install offline downloaded package:
+	--Copy downloaded packages from online machine to a usb
+	cp /var/cache/apt/archives/*.deb <your_directory_here>
+	
+	--Install all downloaded packages on offline machine:
+	sudo dpkg -i *
+	
+------------------------Sources:
+https://phoenixnap.com/kb/how-to-update-kernel-ubuntu

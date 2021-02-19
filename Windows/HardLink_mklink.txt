@@ -1,0 +1,23 @@
+Syntax:
+	mklink [[/d] | [/h] | [/j]] <Link> <Target>
+	
+Parameters:
+	/d			Creates a directory symbolic link. By default, mklink creates a file symbolic link.
+	/h			Creates a hard link instead of a symbolic link.
+	/j			Creates a Directory Junction.
+	<Link>		Specifies the name of the symbolic link that is being created.
+	<Target>	Specifies the path (relative or absolute) that the new symbolic link refers to.
+
+Help:
+	Symbolic link is equal to "Soft Link" and equal to regular "Windows Shortcut" and is not usable so much
+	HardLink is not sensable for applications and create hard link to a file
+	Junction is not sensable for applications and create hard link to a folder
+	
+SQL Path Sample:
+	mklink /J "C:\Link To Folder" "C:\Users\Name\Original Folder"
+	mklink /D "C:\Link To Folder" "\\NetworkLocation\LocationName"
+	mklink /H "C:\Archive\LinkToFile.bak" "C:\Users\Name\Original Folder\myFile.bak"
+	
+Reference:
+	1.https://www.howtogeek.com/howto/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/
+	2.https://technet.microsoft.com/en-us/library/cc753194(v=ws.11).aspx

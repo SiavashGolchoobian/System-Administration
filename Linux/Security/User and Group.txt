@@ -1,0 +1,71 @@
+--=====USER
+#OS defined users file
+cat /etc/passwd
+
+#Users (passwd) line template:
+	User name:Shadow User Password Symbol:User ID:Group ID:GECOS(friendly user name):Home Directory path:Shell
+	(Shell path can be one of the paths specified in a etc/shells file address)
+
+#Password policy configuration file
+cat etc/login.defs
+
+#Password file location
+cat etc/shadow
+
+#Groups file location
+cat etc/group
+
+#Group line template:
+	GroupName:Shadow Group Password Symbol:Group ID:Comma seperated list of Group members
+
+#Query user information
+id <username>
+OR
+grep <username> etc/passwd
+AND
+chage -l <username>									Show or change password expiry informatons
+
+#Create a user
+useradd [options] <username>
+useradd <username> -N								Creaing user without creating same name group
+useradd <username> -G group1,group2,groupN
+useradd -c "Siavash Golchoobian" siavash
+
+#Create a password for user
+passwd <username>
+
+#Enabling root user on ubuntu
+sudo passwd root
+
+#Re-disabling(locking) root user on ubuntu
+sudo usermod -p '!' root
+
+#Modify a user (Options are same as useradd command and more)
+usermod [options] <username>
+usermode <username> -l <newname>
+usermode -G <groupname> <username>					Change/Replace primary group of <username> to <GroupName>
+usermode -a -G <groupname> <username>				Append <GroupName> to <username> existing groups
+usermode -g <groupId> <username>					Change/Replace primary group of <username> to <groupId>
+usermode -e <expireData yyyy-mm-dd> <username>		Change <username> expire date
+
+#Delete a user
+userdel [options] <username>
+userdel -rf <username>
+userdel -r <username>								remove home directory and mail spool
+userdel -f <username>								force removal of files, even if not owned by user
+
+--=====GROUP
+#Query group information
+grep <groupname> etc/group
+
+#Create a group
+groupadd [options] <groupname>
+groupadd -f <groupname>								if <groupname> was already created this option force command to exit without recreating it and without any error output
+groupadd -r <groupname>								-r Creates a system group with group id lower than 999
+
+#Modify a group
+groupmod [options] <groupname>
+groupmod -n <newname> <groupname>
+
+#Delete a group
+groupdel <groupname>

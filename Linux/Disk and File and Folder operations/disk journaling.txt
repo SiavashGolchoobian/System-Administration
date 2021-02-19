@@ -1,0 +1,11 @@
+Btrfs, XFS, and ext4 are popular Linux file systems that implement journaling.
+Unlike ext3/ext2, the ext4 file system does not use the indirect block mapping approach. Instead, it uses the concept of extents. An extent is a way of representing contiguous physical blocks of storage on a file system.
+ext4 supports online defragmentation of individual files or an entire file system.
+The ext4 system, on the other hand, is able to support maximum file system sizes of 1EB (exabyte) as well as maximum individual file sizes of up to 16TB each.
+
+XFS is considered a Big Iron file system, meaning it is enterprise grade, high performance, reliable, scalable, well tested, and so on. Its features include:
+• Quick recovery and support for extended attributes
+• Support for file systems as large as 8 exbibytes (8EiB or ~8 million terabytes)
+• Support for a maximum file size of 8 exbibytes (8EiB or ~8 million terabytes)
+• Support for as close to raw input/output performance that the underlying hardware can provide
+• Online defragmentation and online resizing

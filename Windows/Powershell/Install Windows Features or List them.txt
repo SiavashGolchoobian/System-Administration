@@ -1,0 +1,5 @@
+--Query all windows features and installed status
+Get-WindowsFeature
+
+--Install Windows features by name
+Install-WindowsFeature -name Web-Server

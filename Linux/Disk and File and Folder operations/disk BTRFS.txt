@@ -1,0 +1,49 @@
+--Update the APT package repository cache with the following command:
+sudo apt update
+
+--To install the Btrfs filesystem on Ubuntu 20.04 LTS, run the following command:
+sudo apt install btrfs-progs -y
+
+--Partitioning the Disk:
+sudo cfdisk /dev/sdb
+	Select gpt and press <Enter>.
+	To create a new partition, select Free space, then select [ New ], and press <Enter>.
+	Type in the size of the partition you want to create. I will create a 10 GB partition. So, I will type in 10G.
+	To write the changes to the disk, select [ Write ] and press <Enter>.
+	To confirm the changes, type in yes and press <Enter>.
+	To quit cfdisk program, select [ Quit ] and press <Enter>.
+	
+--Formatting a Disk with Btrfs Filesystem:
+sudo mkfs.btrfs -L sqldata /dev/sdb1
+
+--Mounting a Btrfs Filesystem:
+sudo mkdir /sqldata
+sudo mount /dev/sdb1 /sqldata
+
+--Checking Btrfs Filesystem Usage Information
+sudo btrfs filesystem show
+sudo btrfs filesystem usage /sqldata
+sudo btrfs filesystem df /sqldata
+sudo btrfs filesystem du /sqldata
+sudo btrfs filesystem du -s /sqldata
+
+--Expanding btrfs mpountpoint disk
+	1-Enabling root user on ubuntu
+		sudo passwd root
+	2-login with root user
+		su - root
+	3-Force extended device to detect new physical disk resize by root user permission (else you would get permission denied error), replace sdb with your device:
+		echo 1 > /sys/class/block/sdb/device/rescan
+	4-Typically fdisk was the tool of choice for the first step and a utility like partprobe (or a reboot) for the second step. But things changed and you can use a great software called growpart. growpart is part of the cloud-utils-package, and should be available in your distro's repositories, in case its not already installed with your OS. Debian or Ubuntu:
+		sudo apt-get install -y cloud-utils
+	5-With growpart, enlarging the partition to maximum size and informing the kernel of the changed partition size is a one-liner (The first parameter is the disk device, the second parameter is the number of the partition to resize. After running growpart, your disks look like this):
+		growpart /dev/sdb 1
+	6-Re-disabling(locking) root user on ubuntu
+		sudo usermod -p '!' root
+	7-Expanding btrfs mount point
+		btrfs filesystem resize max /myFolderMountpointPath
+
+------------------Source:
+https://linuxhint.com/install-and-use-btrfs-on-ubuntu-lts/
+https://work-work.work/blog/2018/12/01/ubuntu-1804-btrfs.html
+https://linuxhint.com/btrfs-filesystem-beginner-guide/

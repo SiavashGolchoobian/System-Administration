@@ -1,0 +1,23 @@
+crontab files placed on:
+/etc/crontab						defined jobs
+/etc/cron.allow
+/etc/cron.deny
+
+
+# Example of job definition in /etc/crontab file:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name  command to be executed
+
+you should not modify /etc/crontab file directly, instead use crontab commands as below:
+crontab -l												show current user defined jobs in crontab
+crontab -e 												edit current user crontab file
+
+
+!!! additional to crond that it's resolution is in minutes, you can use systemd.timer unit object as bellow:
+sudo systemd-run --on-active=45 ping -c 5 server-b		this command scheduled to run ping command once, 45 seconds after now. this command resulting to automatically creating a system wide service that calles by systemd.timer when time criteria was matches.
+sudo systemctl list-timers								show time base jobs created via systemd.timer

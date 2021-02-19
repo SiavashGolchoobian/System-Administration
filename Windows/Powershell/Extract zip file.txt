@@ -1,0 +1,1 @@
+Expand-Archive -Path C:\myFile.zip -DestinationPath "C:\Folder01"

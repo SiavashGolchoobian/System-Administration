@@ -1,0 +1,12 @@
+Get-Process | Sort-Object CPU -desc | Select-Object -First 20
+
+-------------- Continuesly monitoring
+while (1) {Get-Process | Sort-Object cpu -desc | Select-Object -First 15 | Format-Table -autosize; sleep -seconds 2; clear}
+
+OR
+
+while (1) {
+	Get-Process | Sort-Object -Property CPU -Descending | Select-Object -First 15 | Format-Table -autosize
+	Sleep -seconds 2
+	clear
+	}

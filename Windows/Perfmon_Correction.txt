@@ -1,0 +1,30 @@
+SQL Error: 3409, 8319
+This error sometime occures after you changing sql server service account, and suddenly after changing account you can't see some perfmon counters of SQL Server and also some counters of activity monitor this is because of perfmon service session was locked with previous account, the resolutions for this error was descused as below:
+
+Solution #1:
+------------
+Loggin-in and loggin-out from the target server with the account used to start the service. Then restart server (maybe restarting MSSQL service can be enough but i didnt have any success without restarting og the server!) and the counter comes back again. But on enterprise servers this may not work, so you would have to check ALL the permissions of the domain account used for MSSQL service.
+
+Solution #2:
+------------
+1.- Change the account that start SQL Server Service and SQL Agent Service to the Local System Account.
+2.- Restart SQL Server Service and SQL Agent Service in order to aply the last change.
+3.- The Follow permissions must be granted to the SQL Server account in the Local Security Policy> * User Rights Assignment.
+* Adjust Memory For A Proccess
+* Log on as Service
+* Log on as a batch job
+* Locks pages in memory
+* Act as part of the operating system
+* Bypass traverse checking
+* Replace a process level token
+4.- Add the SQL Server Domain Account to the SQL Server Groups on the server.
+5.- Log on and log off the server with the SQL Server Domain Account to aply changes.
+6.- Change the account that start SQL Server Service and SQL Agent Service to the SQL Server Domain Account.
+7.- Restar SQL Server service and SQL Server Agent Service.
+8.- Check your ERRORLOG.
+
+Solution #3:
+------------
+granting READ, Execute, Full on the SQL Server Binary folder for the new service account.
+
+

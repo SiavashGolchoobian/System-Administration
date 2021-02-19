@@ -1,0 +1,8 @@
+# Formating disk or usb flash device presented at /dev/sdb2 with ext4 file system
+# For anything with higher capability, XFS tends to be faster. ... In general, Ext3 or Ext4 is better if an application uses a single read/write thread and small files, while XFS shines when an application uses multiple read/write threads and bigger files
+# XFS is 2x~4x faster than ext4, and ext4 is 10x faster than ext3.
+mkfs -t ext4 /dev/sdb2
+mkfs.ext4 /dev/sdb2
+mkfs.xfs /dev/sdb2
+mkfs.btrs /dev/sdb2
+mkfs.btrfs -L sqldata /dev/sdb1		#-L used for partition label name

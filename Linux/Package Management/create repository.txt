@@ -1,0 +1,127 @@
+=================================How to create a Ubuntu repository server step by step
+
+--Update the APT package repository cache with the following command:
+sudo apt update
+
+--As a first step we need to install the Apache HTTP Server which is under the package named apache2, with the command:
+sudo apt install apache2
+
+--Then make sure the service runs at startup:
+sudo systemctl enable apache2
+
+--move to the default DocumentRoot Directory (which is /var/www/html). There we can then create the sub-directory /var/www/html/ubuntu and assign it to the appropriate owner, in this case www-data ( the user under which Apache HTTP runs ).
+cd /var/www/html
+sudo mkdir -p /var/www/html/ubuntu
+sudo chown 299294@saipacorp.com:dbadminsrvr@saipacorp.com /var/www/html/ubuntu
+
+--it's preffered to mount a disk to /var/www/html/ubuntu/ path:
+sudo mount /dev/sdb1 /var/www/html/ubuntu/
+
+--The main tool that allows us to create a local repository is apt-mirror, to install it execute:
+sudo apt install apt-mirror
+
+--In case the package is not found make sure to refresh the packages list first with below command and run above command again:
+sudo apt update
+
+--Selecting which repositories to mirror on the server. Once apt-mirror is installed we can make a backup copy of its configuration file /etc/apt/mirror.list, after that you make sure the line containing the option set base_path points to the correct path for our repository (by default is /var/spool/apt-mirror ).
+sudo cp /etc/apt/mirror.list /etc/apt/mirror.list.org
+
+--So you can now use your favorite editor to change the base_path option in the mirror.list file to /var/www/html/ubuntu; you need also to specify you are mirroring the "bionic" distro instead of "artful" (change accordingly if you have a different Ubuntu version) repos, always in the mirror.list configuration file. 
+sudo nano /etc/apt/mirror.list
+	############# config ##################
+	#
+	# set base_path    /var/www/html/ubuntu
+	#
+	set mirror_path  $base_path/mirror
+	# set skel_path    $base_path/skel
+	# set var_path     $base_path/var
+	# set cleanscript $var_path/clean.sh
+	# set defaultarch  <running host architecture>
+	# set postmirror_script $var_path/postmirror.sh
+	# set run_postmirror 0
+	set nthreads     20
+	set _tilde 0
+	#
+	############# end config ##############
+
+	deb http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse
+	deb http://archive.ubuntu.com/ubuntu bionic-security main restricted universe multiverse
+	deb http://archive.ubuntu.com/ubuntu bionic-updates main restricted universe multiverse
+	#deb http://archive.ubuntu.com/ubuntu bionic-proposed main restricted universe multiverse
+	#deb http://archive.ubuntu.com/ubuntu bionic-backports main restricted universe multiverse
+
+	deb-src http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse
+	deb-src http://archive.ubuntu.com/ubuntu bionic-security main restricted universe multiverse
+	deb-src http://archive.ubuntu.com/ubuntu bionic-updates main restricted universe multiverse
+	#deb-src http://archive.ubuntu.com/ubuntu bionic-proposed main restricted universe multiverse
+	#deb-src http://archive.ubuntu.com/ubuntu bionic-backports main restricted universe multiverse
+
+	clean http://archive.ubuntu.com/ubuntu
+
+
+--In case you don't have much space on disk you can choose to not mirror src packages; so you will comment the relative lines: 
+	############# config ##################
+	#
+	set base_path    /var/www/html/ubuntu
+	#
+	# set mirror_path  $base_path/mirror
+	# set skel_path    $base_path/skel
+	# set var_path     $base_path/var
+	# set cleanscript $var_path/clean.sh
+	# set defaultarch  <running host architecture>
+	# set postmirror_script $var_path/postmirror.sh
+	# set run_postmirror 0
+	set nthreads     20
+	set _tilde 0
+	#
+	############# end config ##############
+
+	deb http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse
+	deb http://archive.ubuntu.com/ubuntu bionic-security main restricted universe multiverse
+	deb http://archive.ubuntu.com/ubuntu bionic-updates main restricted universe multiverse
+	#deb http://archive.ubuntu.com/ubuntu bionic-proposed main restricted universe multiverse
+	#deb http://archive.ubuntu.com/ubuntu bionic-backports main restricted universe multiverse
+
+	#deb-src http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse
+	#deb-src http://archive.ubuntu.com/ubuntu bionic-security main restricted universe multiverse
+	#deb-src http://archive.ubuntu.com/ubuntu bionic-updates main restricted universe multiverse
+	#deb-src http://archive.ubuntu.com/ubuntu bionic-proposed main restricted universe multiverse
+	#deb-src http://archive.ubuntu.com/ubuntu bionic-backports main restricted universe multiverse
+
+	clean http://archive.ubuntu.com/ubuntu
+	
+--Next you copy an important script into /var/www/html/ubuntu/var/
+sudo mkdir -p /var/www/html/ubuntu/var 
+sudo cp /var/spool/apt-mirror/var/postmirror.sh /var/www/html/ubuntu/var/
+
+--Mirroring the selected repositories locally on the server. Now is time to create a local mirror, keep in mind that an initial mirroring (from archive.ubuntu.com only for this tutorial) can take a lot of time and slow down your connection so I would suggest you start this job at night. To start mirroring the remote repos packages to the local server simply execute the command:
+sudo apt-mirror
+
+--If you need to, you can interrupt this process ( with the classic CTRL+C combo ) and restart it later; it will resume from where was left. 
+
+--Configuring automatic sync process by using cron scheduler. After our first sync is completed we need to create a cron job to make sure that we have an automatic up to date local repository; for instance we want this task to run every night at 2:00 AM and therefore:
+sudo crontab -e
+	#Then we edit the crontab to add the following line, And save and exit:
+	00 	02 	*	 *	 *	/usr/bin/apt-mirror
+	
+--Test repository web panel by loading bellow url on browser
+	http://10.0.0.42/ubuntu
+	
+=================================Configuring the Linux client to use the local repository server
+
+--Configuring the local repository list. n any client which is going to use our local repository we need to edit the configuration file /etc/apt/sources.list specifying our local repo and disabling any remote one.
+--It is recommended to comment any line in the /etc/apt/sources.list file referring to repositories not mirrored in our server, for instance, in this case, any line starting with deb-src and containing bionic-backports have been commented.
+--If you don't do that you might get the error Release file has not been found when running the command apt update on the client. 
+--First of all we replace any string "archive.ubuntu.com" with our local mirror IP, in this case 10.0.0.42. Of course your local IP address could be different.
+	sudo cp /etc/apt/sources.list /etc/apt/sources.list.org
+	sudo nano /etc/apt/sources.list
+	replace "archive.ubuntu.com/ubuntu" with "10.0.0.42/ubuntu/mirror/archive.ubuntu.com/ubuntu"
+	comment lines started with "http://us."
+	comment lines containing "bionic-backports" keyword
+--Update local repository index. Now you need to make sure the port 80 is not blocked by the client firewall and then you can run:
+	sudo apt update
+	sudo apt-get update
+
+-------------Sources:
+https://linuxconfig.org/how-to-create-a-ubuntu-repository-server
+https://www.unixmen.com/setup-local-repository-in-ubuntu-15-04/

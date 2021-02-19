@@ -1,0 +1,12 @@
+Sconfig.cmd
+
+
+If you encountered this error: "C:\Windows\System32\en-US\sconfig.vbs(726, 21) SWbemObjectEx: Invalid index.", run below commands on the guest server:
+	#Disabled all NICs IPv6
+	get-netadapter|Disable-NetAdapterBinding -componentID ms_tcpip6
+
+	#Enable all NICs IPv6
+	get-netadapter|Enable-NetAdapterBinding -componentID ms_tcpip6
+	
+Source:
+	https://social.technet.microsoft.com/Forums/en-US/a4a311b5-1ecc-45d8-b8ff-55e54af73925/error-gt-cwindowssystem32enussconfigvbs726-21-swbemobjectex-invalid-index?forum=winserverhyperv

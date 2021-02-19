@@ -1,0 +1,24 @@
+----Add or view access to file\folder
+(Get-Acl "D:\Databases").Access		#Show current permissions
+$Acl = Get-Acl "D:\Databases"
+$Ar = New-Object  system.security.accesscontrol.filesystemaccessrule("SQL_Service","FullControl","Allow")
+$Acl.SetAccessRule($Ar)
+Set-Acl "D:\Databases" $Acl
+
+----Changing file\folder ownership
+(Get-Acl D:\Databases\).Owner
+
+$Acl = Get-Acl "D:\Databases"
+$owner = New-Object System.Security.Principal.NTAccount("BUILTIN\Administrators")
+$Acl.SetOwner($owner)
+
+----=============================Using NTFSSecurity module
+OR (download this modul offline https://www.powershellgallery.com/packages/NTFSSecurity and install it on $env:PSMODULEPATH -Split ";")
+Install-Module -Name NTFSSecurity
+Get-Item 'D:\Databases' | Get-NTFSAccess
+Add-NTFSAccess -Path D:\Databases -Account 'LAB\SQL_Service','BUILTIN\Administrators' -AccessRights 'Fullcontrol' -PassThru
+
+Set-NTFSOwner D:\Databases -Account 'NT AUTHORITY\SYSTEM'
+
+--Create required directories in batch
+'F:\Data01','F:\Data02','F:\Log01','F:\TempdbData01','F:\TempdbData02','F:\TempdbData03','F:\TempdbData04','F:\TempdbLog01' | % {New-Item -Path "$_" -Name Databases -ItemType 'Directory'}

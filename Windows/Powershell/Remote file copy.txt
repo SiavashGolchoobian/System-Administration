@@ -1,0 +1,2 @@
+$session = New-PSSession -ComputerName <Nano Server IP address> -Credential <An Administrator account on the system>
+Copy-Item c:\myfile.zip c:\ -ToSession $session

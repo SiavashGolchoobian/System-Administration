@@ -1,0 +1,7 @@
+--Disbaling IPV6
+Get-NetAdapter
+Get-NetAdapterBinding –InterfaceAlias "Ethernet0"
+Disable-NetAdapterBinding –InterfaceAlias "Ethernet0" –ComponentID ms_tcpip6 -PassThru
+
+--Enabling IPV6
+Enable-NetAdapterBinding -InterfaceAlias Ethernet0 -ComponentID ms_tcpip6

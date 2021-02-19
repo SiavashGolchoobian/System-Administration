@@ -1,0 +1,66 @@
+--==========================================================================SQL SERVER
+#MSSQL
+New-NetFirewallRule -DisplayName "SQL Server (NODE) TCP on Port 49149_49150" -Direction Inbound -LocalPort 49149,49150 -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+New-NetFirewallRule -DisplayName "SQL Server (Browser) UDP on Port 1434" -Direction Inbound -LocalPort 1434 -Protocol UDP -Action Allow -Profile  Domain, Private, Public
+#DAC
+New-NetFirewallRule -DisplayName "SQL Server (DAC Connection on InstanceName) TCP on Port 49140" -Direction Inbound -LocalPort 49140 -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+#MSSQL Debug
+New-NetFirewallRule -DisplayName "SQL Server (Debug: RPC) TCP on Port 135" -Direction Inbound -LocalPort 135 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "SQL Server (Debug) UDP on Port 4500_500" -Direction Inbound -LocalPort 4500,500 -Protocol UDP -Action Allow -Profile  Domain, Private
+#SSIS
+New-NetFirewallRule -DisplayName "SQL Server (Integration Services App)" -Direction Inbound -Program "C:\Program Files\Microsoft SQL Server\150\DTS\Binn\MsDtsSrvr.exe" -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "SQL Server (Integration Services: RPC) TCP on Port 135" -Direction Inbound -LocalPort 135 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "SQL Server (Integration Services Scale Out Master-Worker2Master) TCP on Port 8391" -Direction Inbound -LocalPort 8391 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "SQL Server (Integration Services Scale Out Master-Worker2SSISDB) TCP on Port 49149" -Direction Inbound -LocalPort 49149 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "SQL Server (Integration Services Scale Out Worker-NPin: SMB) TCP on Port 445" -Direction Inbound -LocalPort 445 -Protocol TCP -Action Allow -Profile  Domain, Private
+#KERBEROS
+New-NetFirewallRule -DisplayName "KERBEROS TCP on Port 88" -Direction Inbound -LocalPort 88 -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+New-NetFirewallRule -DisplayName "KERBEROS UDP on Port 88" -Direction Inbound -LocalPort 88 -Protocol UDP -Action Allow -Profile  Domain, Private, Public
+New-NetFirewallRule -DisplayName "KERBEROS Password V5 TCP on Port 464" -Direction Inbound -LocalPort 464 -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+New-NetFirewallRule -DisplayName "KERBEROS Password V5 UDP on Port 464" -Direction Inbound -LocalPort 464 -Protocol UDP -Action Allow -Profile  Domain, Private, Public
+New-NetFirewallRule -DisplayName "DC Locator UDP on Port 389" -Direction Inbound -LocalPort 389 -Protocol UDP -Action Allow -Profile  Domain, Private, Public
+#AOAG
+New-NetFirewallRule -DisplayName "Windows Server Failover Clustering (ClusSvc Heartbeats Control) TCP on Port 3343" -Direction Inbound -LocalPort 3343 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "Windows Server Failover Clustering (NetFt Heartbeats Control) UDP on Port 3343" -Direction Inbound -LocalPort 3343 -Protocol UDP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "Windows Server Failover Clustering (Administrator: NetBIOS Name Resolution) UDP on Port 137" -Direction Inbound -LocalPort 137 -Protocol UDP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "Windows Server Failover Clustering (RPC) TCP on Port 135" -Direction Inbound -LocalPort 135 -Protocol TCP -Action Allow -Profile  Domain, Private
+#AOAG Listener
+New-NetFirewallRule -DisplayName "SQL Server (Listener LSNRTEST) TCP on Port 49148" -Direction Inbound -LocalPort 49148 -Protocol TCP -Action Allow -Profile  Domain, Private
+#Quorum Shared Folder/SMB
+New-NetFirewallRule -DisplayName "Windows Server Failover Clustering (Quorum: SMB And NetBIOS Session Service) TCP on Port 445_139" -Direction Inbound -LocalPort 445,139 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "Windows Server Failover Clustering (Quorum: NetBIOS Name Resolution And NetBIOS Datagram Service) UDP on Port 137_138" -Direction Inbound -LocalPort 137,138 -Protocol UDP -Action Allow -Profile  Domain, Private
+#Filestream
+New-NetFirewallRule -DisplayName "SQL Server (FILESTREAM: NetBIOS Session Service And SMB) TCP on Port 139_445" -Direction Inbound -LocalPort 445,139 -Protocol TCP -Action Allow -Profile  Domain, Private
+#HADR EndPoint
+New-NetFirewallRule -DisplayName "SQL Server (Mirror on InstanceName) TCP on Port 7024" -Direction Inbound -LocalPort 7024 -Protocol TCP -Action Allow -Profile  Domain, Private
+#SSBS
+New-NetFirewallRule -DisplayName "SQL Server (SSBS-Usage) TCP on Port 4740" -Direction Inbound -LocalPort 4740 -Protocol TCP -Action Allow -Profile  Domain, Private
+#SSRS
+New-NetFirewallRule -DisplayName "SQL Server (Report Services HTTP) TCP on Port 80" -Direction Inbound -LocalPort 80 -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+New-NetFirewallRule -DisplayName "SQL Server (Report Services HTTPS) TCP on Port 443" -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+#SSAS
+New-NetFirewallRule -DisplayName "SQL Server (Analysis Services HTTP) TCP on Port 80" -Direction Inbound -LocalPort 80 -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+New-NetFirewallRule -DisplayName "SQL Server (Analysis Services HTTPS) TCP on Port 443" -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+New-NetFirewallRule -DisplayName "SQL Server (Analysis Services SQL Server Browser Service) TCP on Port 2382" -Direction Inbound -LocalPort 2382 -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+New-NetFirewallRule -DisplayName "SQL Server (Analysis Services SSAS Connection) TCP on Port xxx" -Direction Inbound -LocalPort xxx -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+#Enable Windows Firewall
+NetSh Advfirewall set allprofiles state on
+--==========================================================================IDERA
+#Monitoring Host
+New-NetFirewallRule -DisplayName "IDERA dashboard core service, REST API Port - TCP 9292" -Direction Inbound -LocalPort 9292 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "IDERA dashboard core service, .NET Remoting Port - TCP 9293" -Direction Inbound -LocalPort 9293 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "IDERA dashboard web application service, SSL Port - TCP 9291" -Direction Inbound -LocalPort 9291 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "IDERA dashboard web application service, Standard HTTP Port - TCP 9290" -Direction Inbound -LocalPort 9290 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "IDERA dashboard web application service, Monitor Port - TCP 9094" -Direction Inbound -LocalPort 9094 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "IDERA dashboard SQLdm service (Newsdfeed) - TCP 5166,5167,5169" -Direction Inbound -LocalPort 5166,5167,5169 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "IDERA dashboard SQLdm mobile service (Mail Server SMTP) - TCP 25" -Direction Inbound -LocalPort 25 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "IDERA dashboard SQLdm mobile service (Mail Server SMTP) - UDP 25" -Direction Inbound -LocalPort 25 -Protocol UDP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "IDERA dashboard SQLdm mobile service (Website HTTP) - TCP 80" -Direction Inbound -LocalPort 80 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "IDERA dashboard SQLdm mobile service (Newsdfeed) - TCP 5168" -Direction Inbound -LocalPort 5168 -Protocol TCP -Action Allow -Profile  Domain, Private
+--==========================================================================DCOM
+New-NetFirewallRule -DisplayName "RPC Connection (Required by WMI) - TCP 6001-6032" -Direction Inbound -LocalPort 6001-6032 -Protocol TCP -Action Allow -Profile  Domain, Private
+New-NetFirewallRule -DisplayName "DCOM remote WMI service - TCP 135" -Direction Inbound -LocalPort 135 -Protocol TCP -Action Allow -Profile  Domain, Private
+NetSh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=yes
+Important note: to perform WMI queries on a remote computer, the account with which you are logged on must be a member of
+    local "Administrators" group or "Domain Admins" group (if computer is a member of domain)
+    local "Distributed COM Users" group

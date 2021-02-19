@@ -1,0 +1,72 @@
+To Add and Remove Users and Groups for User Rights Assignment in Command Prompt
+1. If you haven't already "ntrights.exe" file (located at Dropbox\Consultant\OS Administration\Windows\Windows Core commands), you will need to do the following below before continuing on to step 2 below.
+	A) Download the ntrights.exe(rktools.exe) file from the "Windows Server 2003 Resource Kit Tools" (https://www.microsoft.com/en-us/download/details.aspx?id=17657).
+	B) Install "Windows Server 2003 Resource Kit Tools" on another client machine as Administrator and ignore any incompatiablity warning during installation (if accured).
+	C) Copy "ntrights.exe" from "C:\Program Files (x86)\Windows Resource Kits\Tools" on previous client machine,and paste it into your "C:\Windows\System32" folder on your server machine.
+
+2. Open an elevated command prompt. 
+3. Type the command you want (below) into the elevated command prompt, and press Enter. (see below samples)
+	A) Add user or group to user rights policy
+		ntrights +r ConstantName -u "User or Group"
+	B) Remove user or group from user rights policy
+		ntrights -r ConstantName -u "User or Group"
+		
+	NOTE:
+	Substitute "ConstantName" in the command above with the actual constant name (ex: "SeShutdownPrivilege") from the table below for the user rights assignment security policy (ex: "Shut down the system") you want to add or remove a user or group.
+	Substitute "User or Group" in the command above with the actual name of the user or group (ex: "Everyone") you want to add or remove for the policy.
+	For example: 
+		ntrights +r SeLockMemoryPrivilege +u "Lab\SQL_Service"
+		ntrights +r SeManageVolumePrivilege +u "Lab\SQL_Service"
+		ntrights +r SeManageVolumePrivilege +u "Lab\SQL_Agent"
+	
+
+Policy																Constant Name
+---------------------												-----------------------------
+Access Credential Manager as a trusted caller						SeTrustedCredManAccessPrivilege
+Access this computer from the network 								SeNetworkLogonRight
+Act as part of the operating system 								SeTcbPrivilege
+Add workstations to domain 											SeMachineAccountPrivilege
+Adjust memory quotas for a process 									SeIncreaseQuotaPrivilege
+Allow log on locally 												SeInteractiveLogonRight
+Allow log on through Remote Desktop Services 						SeRemoteInteractiveLogonRight
+Back up files and directories 										SeBackupPrivilege
+Bypass traverse checking 											SeChangeNotifyPrivilege
+Change the system time 												SeSystemtimePrivilege
+Change the time zone 												SeTimeZonePrivilege
+Create a pagefile 													SeCreatePagefilePrivilege
+Create a token object 												SeCreateTokenPrivilege
+Create global objects 												SeCreateGlobalPrivilege
+Create permanent shared objects 									SeCreatePermanentPrivilege
+Create symbolic links 												SeCreateSymbolicLinkPrivilege
+Debug programs 														SeDebugPrivilege
+Deny access to this computer from the network 						SeDenyNetworkLogonRight
+Deny log on as a batch job 											SeDenyBatchLogonRight
+Deny log on as a service 											SeDenyServiceLogonRight
+Deny log on locally 												SeDenyInteractiveLogonRight
+Deny log on through Remote Desktop Services 						SeDenyRemoteInteractiveLogonRight
+Enable computer and user accounts to be trusted for delegation 		SeEnableDelegationPrivilege
+Force shutdown from a remote system 								SeRemoteShutdownPrivilege
+Generate security audits 											SeAuditPrivilege
+Impersonate a client after authentication 							SeImpersonatePrivilege
+Increase a process working set 										SeIncreaseWorkingSetPrivilege
+Increase scheduling priority 										SeIncreaseBasePriorityPrivilege
+Load and unload device drivers 										SeLoadDriverPrivilege
+Lock pages in memory 					***							SeLockMemoryPrivilege
+Log on as a batch job 												SeBatchLogonRight
+Log on as a service 												SeServiceLogonRight
+Manage auditing and security log 									SeSecurityPrivilege
+Modify an object label 												SeRelabelPrivilege
+Modify firmware environment values 									SeSystemEnvironmentPrivilege
+Perform volume maintenance tasks 		***							SeManageVolumePrivilege
+Profile single process 												SeProfileSingleProcessPrivilege
+Profile system performance 											SeSystemProfilePrivilege
+Remove computer from docking station 								SeUndockPrivilege
+Replace a process level token 										SeAssignPrimaryTokenPrivilege
+Restore files and directories 										SeRestorePrivilege
+Shut down the system 												SeShutdownPrivilege
+Synchronize directory service data 									SeSyncAgentPrivilege
+Take ownership of files or other objects 							SeTakeOwnershipPrivilege
+
+--Source: 
+	https://www.tenforums.com/tutorials/88118-change-user-rights-assignment-security-policy-settings-windows-10-a.html?__cf_chl_jschl_tk__=861422ea9bfacd0778e669e1c98b3d23c9899ece-1585222277-0-AZZd_YL5q3MKQwce4fAYlP34R9MGMHngEIDhLDYCP7nK5cYCqeSDgvAVcuTIkjInPujGSYTxRBicaLvAjrWTVM_Ect5Y7nv1CpUHGnZrOThIUhY8uZc5-Wca1VyxiRArZaboRm-d6_ndqMynGPSOQSXt7M1tgqJDkkHwqWjsXnTFA4eFhDAWgs-ISbtJwqfqwmhoeWm-fGKy_0CChIORO1GYHNoiei23-iqYa1h94-Wk_OagL8RdCxivru_azpGsz-xl-CV9KLnij88RYnhzyQLjoULohuVaDOr-D3YM9Ho6HHzOppxIGsHOZsIwMZVJlz93vjYhCI5ZYCeaPU8Gj04Ult52-mToqmQ2HjXVi4rdNHFUPUlpBrMQkSYGR4ZqR_UlNMecYfJDr-UcOGsC8eAMLbXihk-02kmSiOJ0TFCxcWxelHQrHARpKCbLfp1e3EqsweY0eWohl5VKYwzWppk
+	http://awesomeprojectsxyz.blogspot.com/2017/11/windows-10-home-how-to-enable-lock.html

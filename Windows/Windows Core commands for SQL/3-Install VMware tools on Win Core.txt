@@ -1,0 +1,5 @@
+To install the VMWare Tools on a virtual machine running Windows Server Core you will have to use the following parameter:
+
+setup64.exe /s /v /qn
+
+This may take few menutes and after the installation the virtual machine will restart automatically.

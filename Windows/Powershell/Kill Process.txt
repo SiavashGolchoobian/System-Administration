@@ -1,0 +1,4 @@
+Get-Process
+Get-Process | Sort-Object CPU -desc | Select-Object -First 20
+Get-Process sql*
+Stop-Process -Id <xx>

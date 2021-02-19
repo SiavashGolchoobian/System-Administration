@@ -1,0 +1,9 @@
+--Open powershell as admin
+--Run your VPN
+in PS run below commands to install chocolatey:
+ps>Set-ExecutionPolicy AllSigned
+ps>Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+ps>choco
+
+Source:
+https://chocolatey.org/install

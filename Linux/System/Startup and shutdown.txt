@@ -1,0 +1,15 @@
+#Restart os
+shutdown -r
+OR
+restart		#only can be used on RedHat based linux
+reboot		#only can be used on Debian based linux
+
+#shutdown system
+shutdown	#Scheduling shutdown for a minute later
+OR
+shutdown -P
+OR
+shutdown +5	#Scheduling shutdown for 5 minutes later from now
+
+#Canceling sheculed shutdown
+shutdown -c

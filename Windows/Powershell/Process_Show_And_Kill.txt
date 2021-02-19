@@ -1,0 +1,5 @@
+--To get list of process'es on OS:
+PS>Get-Process
+
+--To Kill a Process by PID:
+PS>Stop-Process -id xx

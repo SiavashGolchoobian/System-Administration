@@ -1,0 +1,19 @@
+--====================Install IIS (On windows core machine)
+Install-WindowsFeature -name Web-Server
+
+--====================Install Remote Management tools
+--install the Web Management Service with the following command(On windows core machine)
+Install-WindowsFeature Web-Mgmt-Service
+
+--Create a firewall exception (if needed) by running the following command in PowerShell. 
+netsh advfirewall firewall add rule name="IIS Remote Management" dir=in action=allow service=WMSVC
+Open "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WebManagement\Server" Then set "EnableRemoteManagement" to "1"
+
+--Configure the Web Management Service to run on boot by running the following command in command prompt.
+Set-Service -Name WMSVC -StartupType Automatic
+Start-Service WMSVC
+
+--Connect to this Machin name or IP via another desktop exprience enable windows with Internt Information Services (IIS) Manager
+--https://4sysops.com/archives/manage-internet-information-services-iis-using-windows-admin-center-wac/
+Install Microsoft.Net Core
+To manage an IIS Server, you need to install Microsoft IIS Administration on IIS host downloadable from this link (https://github.com/microsoft/IIS.Administration/releases) and then manage it from Windows Admin Center (you should put downloaded file on IIS server)

@@ -1,0 +1,26 @@
+Solution 1 (Recommended):
+	# Query Current Page file information
+	Get-WmiObject -Query "Select * From Win32_PageFileSetting Where Name like '%pagefile.sys'";
+	# PowerShell Script to set the size of pagefile.sys
+	$computersys = Get-WmiObject Win32_ComputerSystem -EnableAllPrivileges;
+	$computersys.AutomaticManagedPagefile = $False;
+	$computersys.Put();
+	# Delete page file from C drive
+	$CurrentPageFile = Get-WmiObject -Query "select * from Win32_PageFileSetting where name='c:\\pagefile.sys'"
+	$CurrentPageFile.delete()
+	# Create new page file
+	Set-WMIInstance -Class Win32_PageFileSetting -Arguments @{name="D:\pagefile.sys";InitialSize = 1024; MaximumSize = 1536}
+	# Query New Page file information
+	Get-WmiObject -Query "Select * From Win32_PageFileSetting Where Name like '%pagefile.sys'";
+	
+Solution 2 (Not recommended bacause it does not remove C:\pagefile.sys):
+	STEP 1:
+		Download and install "Script to configure virtual memory page file size (PowerShell)" from https://gallery.technet.microsoft.com/scriptcenter/Script-to-configure-e8d85fee
+			OR
+		From Dropbox use "AdjustVirtualMemoryPagingFileSize.zip" pre-downloaded file
+	STEP 2:
+		Execute ".\AdjustVirtualMemoryPagingFileSize.psm1" file from downloaded file
+			Import-Module C:\AdjustVirtualMemoryPagingFileSize.psm1
+			Get-Help Set-OSCVirtualMemory
+			--If you want to adjust virtual memory page file size on "D" and "E" drive, then you can type the command 
+				Set-OSCVirtualMemory  -InitialSize 1024  -MaximumSize 2048  -DriveLetter "D:","E:"

@@ -1,0 +1,36 @@
+--ALSO YOU CAN USE MICROSOFT NETWORK MONITOR (nmon) or WIRESHARK APPLICATION
+
+Netsh trace start scenario=NetConnection capture=yes report=no persistent=no maxsize=5120 correlation=no traceFile=d:\NetTrace02.etl
+Netsh trace stop
+--Netsh trace start capture=yes persistent=no maxsize=1024 traceFile=d:\NetTrace01.etl
+--Netsh trace start scenario=NetConnection capture=yes report=yes persistent=no maxsize=1024 correlation=yes traceFile=d:\NetTrace.etl
+
+Syntax:
+	netsh trace start scenario=x,y,z capture=yes persistent=no maxsize=5120  report=yes correlation=no globalLevel=win:Verbose traceFile=C:\temp\trace\trace001.etl
+
+	Here are the details of the scenarios usually used, to see a complete list goto step *1:.
+		InternetClient –> Diagnose web connectivity issues
+		InternetServer –> Troubleshoot server-side web connectivity issues
+		NetConnection –> Troubleshoot issues with network connections
+	*1:To view all the NETSH TRACE scenarios enter the following command in cmd:
+		netsh trace show scenarios
+
+	Here are some other optional parameters I used:
+		capture –> Specifies whether packet capture is enabled in addition to trace events. If unspecified, the default entry for capture is no.
+	        persistent -> Specifies whether the tracing session resumes upon restarting the computer, and continues to function until the “Netsh trace stop” command is issued. If unspecified, the default entry for persistent is no.
+        	maxSize –> default is 250MB-ish, if set to 0 then there is no maximum
+
+	To find the values for setting the global level verbosity, execute the following command:
+		netsh trace show globalkeywordsandlevel
+	
+	fileMode = { single | circular | append }
+
+	correlation = { yes | no | disabled }
+Source:
+	https://www.cellstream.com/intranet/reference-reading/tipsandtricks/331-using-netsh-to-capture-packets-in-windows.html
+	https://blogs.msdn.microsoft.com/canberrapfe/2012/03/30/capture-a-network-trace-without-installing-anything-capture-a-network-trace-of-a-reboot/
+	https://blogs.technet.microsoft.com/yongrhee/2013/08/16/so-you-want-to-use-wireshark-to-read-the-netsh-trace-output-etl/
+	https://blogs.technet.microsoft.com/yongrhee/2015/05/23/tool-installing-the-microsoft-message-analyzer-version-1-3/
+	https://blogs.msdn.microsoft.com/benjaminperkins/2018/03/09/capture-a-netsh-network-trace/
+	http://techgenix.com/new-netsh-commands-windows-7-server-2008-r2/
+	https://blogs.technet.microsoft.com/askpfeplat/2016/12/27/basic-network-capture-methods/

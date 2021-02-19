@@ -1,0 +1,20 @@
+#Show interactive list of processes
+top
+
+#List processes (head used to limiting the list to default 10)
+ps auxww | head
+	-a	show all processes (all users)
+	-r	show only running processes
+	-x	show processes that do not have a controlling terminal
+	-u	show the process owners
+	-w	show processes command-line parameters
+	-ww	show processes command-line parameter with unlimited line size
+	
+#Kill a process
+kill -1 <pid> 		signal to app (pid) to re-read config files
+kill -9 <pid>		kills the process in force mode
+kill -15 <pid>		kills the process by signaling the app (pid) to shutdown clearly (default behaviour of kill command when you dont specify any number 1,9,15)
+
+#--Find zombie processes
+When a process dies before all of its spawned child processes have completed. Such orphaned processes are called zombie processes. The orphaned child processes automatically inherit init(process id 1) as their parent process and this forms the basis of another one of init’s roles—the zombie reaper.
+ps -ef				show a number of processes that will have a parent process ID (PPID) of 1. these processes are not all zombies !

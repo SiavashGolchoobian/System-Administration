@@ -1,0 +1,7 @@
+Run wbemtest.exe.
+Click Connect.
+In the NameSpace text box, enter \\server\root\cimv2 where server is the name of the server to which you want to connect.
+Click Connect.
+Click Query.
+Enter SELECT * FROM Win32_LogicalDisk WHERE FileSystem = "NTFS"
+Click Apply. 

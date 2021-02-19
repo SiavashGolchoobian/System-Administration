@@ -1,0 +1,2 @@
+--Like fdisk but easier with wizard
+sudo cfdisk /dev/sdb

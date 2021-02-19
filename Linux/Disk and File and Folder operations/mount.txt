@@ -1,0 +1,43 @@
+Finding all mount points syntax:
+	findmnt
+	
+syntax:
+	mount [options] device directory
+	
+	[options]
+	-a	mount all the file systems listed in /etc/fstab
+	
+#list all the currently mounted file systems
+mount
+mount -l -t			#list all mounted file systems o type 
+
+
+#Mounting sdb1 device (usb flash) to media/sdb1 path
+sudo mount /dev/sdb1 /media/sdb1
+
+#Unmounting sdb1 device (usb flash)
+sudo umount /dev/sdb1
+sudo umount -f /dev/sdb1		#force unmounting directory if it's in-use
+sudo umount -l /dev/sdb1		#unmounting directory in lazy manner when it's in-use, and unmounting, file system as soon as the filesystem locks relaeased
+
+#Get list of devices annt ther UUID'sdb1
+sudo blkid
+
+--Create new tmpfs under /home/mytempfs
+sudo mkdir /home/mytempfs
+sudo -mount -t tmpfs -s size=5G tmpfs /home/mytempfs
+
+permanent disk attachment via fstab
+---------------------------------
+#fstab file for auto mounting devices on startup
+The /etc/fstab file is a configuration file that mount canuse. This file contains a list of all partitions known to the system. During the boot process, this list is read and the items in it are automatically mounted with the options specified therein
+To see /dev/sdb1 block device’s UUID (Universally Unique Identifier) run:
+	blkid /dev/sdb1
+To modify fstab file:
+	echo 'UUID=ea8b08a4-3e9f-4482-83e9-c5f03b9f05d6 /data xfs defaults 1 1' >> /etc/fstab
+	OR
+	nano /etc/fstab
+	fstab file format is like below:
+	/dev/device	UUID									/dir/to/mount	fstype	options		dump		fsck
+	-----------------------------------------			-------------	------	----------	-------		---------
+	UUID=ea8b08a4-3e9f-4482-83e9-c5f03b9f05d6			/data			xfs		defaults		0			0

@@ -1,0 +1,6 @@
+--Check mount point
+systemctl status tmp.mount
+
+--Create new tmpfs under /home/mytempfs
+sudo mkdir /home/mytempfs
+sudo -mount -t tmpfs -s size=5G tmpfs /home/mytempfs

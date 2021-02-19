@@ -1,0 +1,2 @@
+nslookup yourIPaddress
+nbtstat -a yourIPaddress

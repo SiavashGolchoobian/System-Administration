@@ -1,0 +1,5 @@
+--Get hostname
+hostnamectl
+
+--Set hostname
+sudo hostnamectl set-hostname ubuntu18hd1

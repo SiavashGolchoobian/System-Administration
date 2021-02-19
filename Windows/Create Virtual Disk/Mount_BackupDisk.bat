@@ -1,0 +1,1 @@
+Diskpart /s U:\Databases\Mount_BackupDisk.script

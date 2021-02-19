@@ -1,0 +1,4 @@
+Search event viewer for following events:
+
+Event Id 6005 will be raised when windows startup and event log svc started
+Event id 6006 will be raised when windows shuting down and event log svc stopping

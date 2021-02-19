@@ -1,0 +1,10 @@
+--The first thing that you need to do is get a list of the applications that are installed on the machine. The command for doing so is:
+Get-WmiObject -Class Win32_Product | Select-Object -Property Name
+
+$MyApp = Get-WmiObject -Class Win32_Product | Where-Object{$_.Name -eq "Free Tools"}
+$MyApp.Uninstall()
+
+OR
+
+$MyApp = Get-WmiObject -Class Win32_Product -ComputerName PC01 -Filter "Name like '%symantec%'"
+$MyApp.Uninstall()

@@ -1,0 +1,2 @@
+#show os and it's version
+uname -a

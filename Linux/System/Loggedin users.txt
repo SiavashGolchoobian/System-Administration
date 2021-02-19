@@ -1,0 +1,5 @@
+#Who is logged in
+who
+
+#Who is logged in with complete info
+w

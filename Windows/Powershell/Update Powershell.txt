@@ -1,0 +1,12 @@
+The following commands can be used to install PowerShell using the published winget packages (USE VPN):
+Search for the latest version of PowerShell:
+	winget search Microsoft.PowerShell
+
+Install a version of PowerShell using the Version parameter:
+	winget install -e 'Microsoft.PowerShell'
+	
+	
+--Winget tools url:
+	https://github.com/microsoft/winget-cli/releases
+--Source:
+	https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-windows?view=powershell-7

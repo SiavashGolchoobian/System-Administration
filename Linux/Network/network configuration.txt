@@ -1,0 +1,92 @@
+ifconfig
+
+Set static ip in Centos:
+------------------------
+Within the directory /etc/sysconfig/network-scripts/ you should find the file ifcfg-INTERFACENAME (Where INTERFACENAME is the name of your interface). In my instance, the file is ifcfg-enp0s3. It is important that you configure that file, and not the ifcfg-eth file. Open the correct file for editing with the command sudo nano /etc/sysconfig/network-scripts/ifcfg-enp0s3. We need to modify that file in order to not only change the protocol from dhcp to static, but to add the specific IP address. So when you open up that file, you'll want to change:
+
+BOOTPROTO=dhcp
+
+To:
+
+BOOTPROTO=static
+
+Now you'll need to add the entries to set not only the IP address, but the netmask, gateway, and DNS addresses. At the bottom of that file, add the following:
+
+IPADDR=192.168.1.200
+NETMASK=255.255.255.0
+GATEWAY=192.168.1.1
+DNS1=1.0.0.1
+DNS2=1.1.1.1
+DNS3=8.8.4.4
+
+NOTE: All fields in bold, you will edit to reflect your networking needs. If you have fewer or more DNS entries, add or remove them as needed.
+Save and close that file. In order to make the changes take effect, issue the command sudo systemctl restart network. Once the networking system has restarted, issue the command ip a to see that your IP address has changed to reflect your configuration.
+
+Set static ip in Ubuntu Server:
+------------------------
+The first step is to identify the name of the ethernet interface you want to configure. To do so use the ip link or ifconfig command, as shown below:
+
+$ip link
+OR
+$ifconfig
+
+Netplan configuration files are stored in the /etc/netplan directory and have the extension .yaml. You’ll probably find one or two YAML files in this directory. The file may differ from setup to setup. Usually, the file is named either 01-netcfg.yaml, 50-cloud-init.yaml, or NN_interfaceName.yaml, but in your system it may be different.
+Open the YAML configuration file with your text editor (sudo nano /etc/netplan/01-netcfg.yaml or any other name):
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens3:
+      dhcp4: yes
+
+Before changing the configuration, let’s explain the code in a short.
+Each Netplan Yaml file starts with the network key that has at least two required elements. The first required element is the version of the network configuration format, 
+and the second one is the device type. The device type can be ethernets, bonds, bridges, or vlans.
+The configuration above also includes the renderer type. Out of the box, if you installed Ubuntu in server mode, the renderer is configured to use networkd as the back end.
+Under the device’s type (in this case ethernets), you can specify one or more network interfaces. In this example, we have only one interface ens3 that is configured to 
+obtain IP addressing from a DHCP server (as above) dhcp4: yes.
+To assign a static IP address to ens3 interface, edit the file as follows:
+
+    Set DHCP to dhcp4: no.
+    Specify the static IP address 192.168.121.199/24. Under addresses: you can add one or more IPv4 or IPv6 IP addresses that will be assigned to the network interface.
+    Specify the gateway gateway4: 192.168.121.1
+    Under nameservers, set the IP addresses of the nameservers addresses: [8.8.8.8, 1.1.1.1]
+
+/etc/netplan/01-netcfg.yaml
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens3:
+      dhcp4: no
+      addresses: [192.168.136.160/24]
+      gateway4: 192.168.136.2
+      nameservers:
+          addresses: [192.168.136.130, 8.8.8.8]
+
+When editing Yaml files, make sure you follow the YAML code indent standards. If there are syntax errors in the configuration, the changes will not ne applied.
+Once done save and close the file and apply the changes with:
+
+sudo netplan apply
+
+Verify the changes by typing:
+
+ip addr show dev ens33
+
+Also to disable ipv6 on ubuntu, open the /etc/default/grub using your favorite text editor with root privileges (sudo nano /etc/default/grub) and change/add (you can use , for adding more than one values to each key, if nedded):
+	
+	FROM:
+	GRUB_CMDLINE_LINUX_DEFAULT=""
+	GRUB_CMDLINE_LINUX=""
+	TO:
+	GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1"
+	GRUB_CMDLINE_LINUX="ipv6.disable=1"
+
+	Once you have made the above change within the /etc/default/grub file execute the following commands to apply the GRUB changes:
+	$sudo update-grub
+
+	All done. Optionally reboot your Ubuntu 
+
+-----Source
+https://linuxize.com/post/how-to-configure-static-ip-address-on-ubuntu-18-04/
+https://linuxconfig.org/how-to-disable-ipv6-address-on-ubuntu-18-04-bionic-beaver-linux

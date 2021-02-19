@@ -1,0 +1,22 @@
+#download a file from the web
+wget [options] <URL>
+	-P <path>					Place downloaded file in the <path> location
+	-b background
+	-c 							continuing breaked downlad
+	-d debug
+	-v verbose
+	-i <file>: 					read URL from input file
+	-t <number>: 				try <number> times
+	--progress=bar
+	--user=<user> 				passing user and password used in ftp or http request
+	--password=<password>		passing user and password used in ftp or http request
+	--http-user=<user> 			passing user and password used in ftp or http request
+	--http-password=<password>	passing user and password used in ftp or http request
+	--proxy-user=<user> 		passing user and password used in ftp or http request
+	--proxy-password=<password>	passing user and password used in ftp or http request
+
+Sample #1: download to current location
+	wget http://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz
+	
+Sample #2: download to specified locations
+	wget -P home/downloads http://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz

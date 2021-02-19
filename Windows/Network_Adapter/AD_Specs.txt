@@ -1,0 +1,9 @@
+--==========To find AD server & port (Replace <<your.AD.domain>> with your domain name like saipacorp.com
+C:\> nslookup 
+> set types=all
+> _ldap._tcp.<<your.AD.domain>>
+_ldap._tcp.<<your.AD.domain>>  SRV service location:
+      priority       = 0
+      weight         = 100
+      port           = 389
+      svr hostname   = <<ldap.hostname>>.<<your.AD.domain>>

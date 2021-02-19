@@ -1,0 +1,140 @@
+STEP 00: Configure your guest network static ip and dns servers (as discribed in "network configuration.txt")
+STEP 01: Start by updating your Ubuntu / Debian Linux system.This is essential as installations may fail if the server is a freshly installed.
+	sudo apt -y update
+	
+STEP 02: For Ubuntu 20.04|18.04, add the following repositories to your sources.list file.
+sudo tee -a /etc/apt/sources.list <<EOF
+deb http://us.archive.ubuntu.com/ubuntu/ bionic universe
+deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates universe
+EOF
+
+STEP 03: make sure that the same DNS IP addresses (as above STEP 00) and the domain name are added to /etc/resolv.conf file.
+	sudo nano /etc/resolv.conf
+	
+	nameserver 192.168.136.130
+	nameserver xxx.xxx.xxx.xxx
+STEP 04: Ubuntu 20.04|18.04 comes with systemd-resolve which you need to disable for the server to access your network DNS directly.
+	sudo systemctl status systemd-resolved
+	sudo systemctl disable systemd-resolved
+	sudo systemctl stop systemd-resolved
+
+STEP 05: Restart the network services or reboot the machine in order to apply the new network configurations. Issue a ping command against your domain name in order to test if DNS resolution is working as expected. 
+	ping -c2 lab.com
+
+STEP 06: Install required packages, A number of packages are required for joining an Ubuntu 20.04|18.04 / Debian 10 system to Active Directory (AD) domain.
+		 (The System Security Services Daemon (SSSD developed by redhat) provides access to different identity and authentication providers. )
+		 (realmd configures sssd or winbind to do the actual network authentication and user account lookups. realmd is really a wrapper for SSSD and encompasses a number of existing technologies into a rather easy to install and configure package to get SSO/LDAP integration to work)
+	sudo apt update
+	sudo apt -y install realmd libnss-sss libpam-sss sssd sssd-tools adcli samba-common-bin oddjob oddjob-mkhomedir packagekit
+	
+	!!ATTENTION!!: if you get "Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/" error do following and try abve commands against
+		sudo nano /etc/resolv.conf
+		
+		and modify opened file as bellow:
+		
+		nameserver 192.168.136.130
+		nameserver 8.8.8.8
+STEP 07: Query/Discover Active Directory domain on Debian 10 / Ubuntu 20.04|18.04
+	sudo realm discover lab.com
+STEP 08: Join Ubuntu 20.04|18.04 / Debian 10 To Active Directory (AD) domain
+	sudo realm join -U Administrator lab.com
+	Create AAA record of joined machine manually in DNS server!
+STEP 09: The last important configuration required is represented by time synchronization. Install ntpdate package, query and sync time with the AD DC by issuing the below commands.
+	sudo apt-get install ntpdate
+	sudo ntpdate -q lab.com
+	sudo ntpdate lab.com
+STEP 10: [ATTENTION to OS Version] On RHEL based systems, user’s home directory will be created automatically. On Ubuntu / Debian, you need to enable this feature (Now we need to to set up a creation of Home Dirs for AD users when they log in.).
+	sudo nano /etc/pam.d/common-session
+	#add this line in the end of file
+	session optional pam_mkhomedir.so skel=/etc/skel/ umask=077
+STEP 11: Then activate with (after executing command on GUI select check box "activate mkhomedir" or "create home directory on logon" by pressing space bar on this choice and press OK):
+	sudo pam-auth-update
+STEP 12: Your sssd.conf configuration file is located at /etc/sssd/sssd.conf. Whenever there is a change in the file, restart is required.
+	sudo systemctl restart sssd
+	
+	Status should be running:
+	
+	systemctl status sssd
+	realm list					#see some info about our newly joined domain:
+STEP 13: Enable systemd-resolved service
+	systemctl status systemd-resolved
+	sudo systemctl enable systemd-resolved
+	sudo systemctl start systemd-resolved
+	
+STEP 14: Now let’s check if we can get information about the AD user. Replace ‘user’ with the name of the domain user account.
+	id siavash@lab.com
+	
+	#Also to query group memberships of a domain user:
+	groups siavash@lab.com
+STEP 15: Let’s try to log in as an AD user.
+	su - siavash@lab.com
+	#This means that you have successfully logged in as an AD user.
+
+STEP 16: Test other domain machines name resolving:
+	ping -c2 anothermachine.lab.com
+	
+-----OPTIONAL STEPS:
+STEP 17: Configure Sudo Access
+By default Domain users won’t have permission to escalate privilege to root. Users have to be granted access based on usernames or groups.
+
+Let’s first create sudo permissions grants file.
+	sudo nano /etc/sudoers.d/domain_admins
+	#--Add single user:
+	siavash@lab.com        		ALL=(ALL)       ALL
+	#--Add another users:
+	sasan@lab.com     			ALL=(ALL)   ALL
+	administrator@lab.com     	ALL=(ALL)   ALL
+	#--Add groups, for example add AD "Domain Admins" group to this machine administrtors (it is important to escape spaces in group names with a \)
+	%group1@lab.com     		ALL=(ALL:ALL)   ALL
+	%domain\ admins@lab.com		ALL=(ALL:ALL)	ALL
+	%hadoop@lab.com				ALL=(ALL:ALL)	ALL
+	#--Add group with two or three names.
+	%security\ users@example.com       ALL=(ALL)       ALL
+	%system\ super\ admins@example.com ALL=(ALL)       ALL
+
+Additionally, you can allow authorization for some AD users or groups to permit these user access via SSH and console and restrict others. The example below is set to deny everyone and allow for siavash, sasan, 'Domain Admins' and 'admin users' group.
+sudo realm deny –all
+sudo realm permit siavash@lab.com sasan@lab.com
+sudo realm permit -g 'Domain Admins' 'admin users'
+
+If instead you like to allow all users access, run:
+sudo realm permit --all
+
+To deny all Domain users access, use:
+sudo realm  deny --all
+
+Configuring AD users to get root privileges is the same as for local users, but in another file.
+sudo nano /etc/sudoers.d/admins
+#Add the necessary lines to it. For example:
+user ALL=(ALL) ALL
+siavash@lab.com ALL=(ALL) ALL
+%Domain\ Admins ALL=(ALL) ALL
+
+To remove Domain account from workstation, Only delete AD account home directory, buntu doesn't store any domain user files outside /home
+	rm -R /home/user@domain.com
+	
+------------------------------------------------Disjoin Server from Domain
+To Disjoin Ubuntu 20.04|18.04 / Debian 10 from Active Directory (AD) domain
+	sudo realm leave -U Administrator lab.com
+------------------------------------------------Important files:
+sudo cat /etc/sssd/sssd.conf
+cat /etc/nsswitch.conf
+cat /etc/krb5.conf
+cat /etc/pam.conf
+
+To clean up the login screen (and clean up the cached passwords) I use the following commands:
+sudo rm /var/lib/sss/db/*
+sudo rm /var/lib/sss/mc/*
+sudo rm -rf /var/lib/lightdm/.cache
+sudo rm -rf /var/cache/lightdm
+sudo rm -rf /var/log/wtmp
+And reboot the machine
+
+----Sources:
+https://computingforgeeks.com/join-ubuntu-debian-to-active-directory-ad-domain/
+https://www.server-world.info/en/note?os=Ubuntu_20.04&p=realmd
+https://serverspace.io/support/help/linux-machine-into-windows-ad-domain/
+https://blah.cloud/infrastructure/utilising-kerberosad-auth-ubuntu-14-04-realmd/
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sssd-introduction
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/sssd-client-side-views
+https://support.datafabric.hpe.com/s/article/How-to-configure-LDAP-client-by-using-SSSD-for-authentication-on-CentOS?language=en_US

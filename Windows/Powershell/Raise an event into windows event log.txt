@@ -1,0 +1,9 @@
+--Query Event Log Categories
+Get-EventLog -List
+
+--Query all Events written to the specified category (like Application category)
+Get-EventLog -LogName Application
+
+--Write an event log to windows event log
+New-EventLog –LogName Application –Source "myApp"
+Write-EventLog -LogName Application -Source "myApp" -Message "Hi, i raise an event manually" -EventId 0 -EntryType information

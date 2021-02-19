@@ -1,0 +1,5 @@
+setx -m Path "%Path%;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn"
+setx Path "%Path%;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn"
+ECHO %PATH%
+
+C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\sqlcmd.exe

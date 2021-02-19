@@ -1,0 +1,5 @@
+--For choosing which network adapter should be used for specified application you can use this command and its application
+--Open RDP Via RighTel Adapter
+c:\windows\system32>forcebindip 192.168.42.202 "c:\windows\system32\mstsc.exe"
+--Open RDP Via Lan Adapter
+c:\windows\system32>forcebindip 172.21.0.203 "c:\windows\system32\mstsc.exe"

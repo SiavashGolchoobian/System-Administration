@@ -1,0 +1,25 @@
+#Standard log path is:
+	/var/log					Default Log files repository
+	/etc/rsyslog.conf			rsyslog service config file, you can find target of all kind of event messages in this file
+	/etc/rsyslog.d/*.conf		rsyslog service additional customized config files directory
+	/dev/console				kernel messages log
+	/var/log/messages			info messages
+	/var/log/secure				security related messages
+	/var/log/cron				cron messages
+	
+#--Write a message to log file
+logger <your message>			this message is stored on /var/log/message
+
+#--Reading logs via journalctl in trimmed format
+journalctl																--Show whole log file
+journalctl -n 20														--Show last 20 ines of log file
+journalctl -f															--show logs in real-time as they are being generated, press Ctrl+C to quiet
+journalctl --since="6 days ago"											--show messages from 6 days ago
+journalctl --since="6 days ago" --until="4 days ago"					--show messages from 6 days ago till 4 days ago
+journalctl --since=2020-12-24
+journalctl --since="2020-12-24 13:30" --until="2020-12-25 18:300"		--show messages from 6 days ago till 4 days ago
+journalctl --since=2020-12-24 -p warning								--show messages from 2020-12-24 with priority of warnning or higher
+journalctl --since=2020-12-24 -p err									--show messages from 2020-12-24 with priority of error or higher
+journalctl -b -p err													--show messages from the current boot session of the srver with priority of error or higher
+journalctl -u dbus														--show all messages related to systemd service unit named dbus.services
+journalctl /dev/[vs]da													--show all messaged related to /dev/sda or /dev/vda hard disk devices

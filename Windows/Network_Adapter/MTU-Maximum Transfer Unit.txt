@@ -1,0 +1,9 @@
+--https://www.sonicwall.com/en-us/support/knowledge-base/170505851231244
+--http://www.tp-link.com/us/FAQ-190.html
+--https://support.citrix.com/article/CTX115434
+The maximum transmission unit, here on referred to as MTU, is the maximum amount of bytes that can be encapsulated in an IP packet. The MTU size includes the data payload, any transport headers (such as TCP, UDP, GRE, RTP, or ICMP), and the IP header. 
+
+Let’s assume that you don’t know the MTU of every hop and every piece of hardware between your SQL Server and the destination machine. Your network connection may be a 10Gb (gigabit) connection, but that doesn’t mean it is for the whole path. We can determine the MTU using the ping test. For this test, we will use the –-f switch to mark the packets as “don’t fragment”. This means the packets will not get broken down into smaller packets. They will be rejected.
+Remember that The ping itself has a 28 byte overhead (20 bytes IP header + 8 bytes ICMP header), so I subtract 28 bytes from the size I specify to get the appropriate size.
+First, I test with the maximum network packet size, and I see that the ping attempts all result in lost packets due to the packets being marked to not be fragmented, then if your packet is lost you can reduce packet size until successful result, that successful result plus 28 byte as your network usable MTU size:
+	>ping 192.168.1.1 -l 32739 -f

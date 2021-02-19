@@ -1,0 +1,1 @@
+Get-Volume  | Format-List AllocationUnitSize, FileSystemLabel

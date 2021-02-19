@@ -1,0 +1,5 @@
+The size parameters are in MB and the maximum size should be the same as the proposed size.  If the status is anything other than OK – it means there is a problem.
+
+Get-WmiObject -Class Win32_Registry | 
+Select CurrentSize, ProposedSize, MaximumSize, Status,
+@{Name=“InstallationDate”;Expression={$_.ConvertToDateTime($_.InstallDate)}}

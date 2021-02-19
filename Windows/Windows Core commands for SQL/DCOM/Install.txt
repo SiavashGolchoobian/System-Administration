@@ -1,0 +1,22 @@
+To set Remote Launch and Remote Activation
+DComPerm.exe -ml set LAB\SQL_Monitor permit level:rl,ra
+
+You can verify this by running DComPerm.exe -ml list
+C:\>DComPermEx.exe -ml list
+
+An example validation:
+Machine launch permission list:
+Remote and Local launch permitted to BUILTIN\Administrators.
+Remote and Local activation permitted to BUILTIN\Administrators.
+Local launch permitted to \Everyone.
+Local activation permitted to \Everyone.
+Remote and Local launch permitted to BUILTIN\Distributed COM Users.
+Remote and Local activation permitted to BUILTIN\Distributed COM Users.
+Remote and Local launch permitted to BUILTIN\Performance Log Users.
+Remote and Local activation permitted to BUILTIN\Performance Log Users.
+Local launch permitted to APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES.
+Local activation permitted to APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES.
+Local launch permitted to APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES.
+Local activation permitted to APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES.
+Remote launch permitted to MYDOMAIN\OpenDNS_Connector.
+Remote activation permitted to MYDOMAIN\OpenDNS_Connector.

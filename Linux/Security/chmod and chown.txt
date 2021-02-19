@@ -1,0 +1,28 @@
+--=====Change File/Folder attributes(chmod)
+letter	permission	Value
+------	----------	------
+r		read		4
+w		write		2
+x		execute		1
+
+chmod [-R] <user/owner_value><group_value><others_value> <file/dir>
+
+#append grant execution permission to user/owner and group, also revoke read,write and execution from others
+chmod ug+x,o-rwx myfile.sh
+
+#set grant execution permission to user/owner and group, also revoke read,write and execution from others
+chmod ug=rwx,o-rwx myfile.sh
+chmod 770
+
+#set grant execution permission to user/owner and group, also revoke read,write and execution from others recursively
+chmod -R ug=rwx,o-rwx myfile.sh
+chmod -R 770
+
+
+
+--=====Change File/Folder Ownership(chown)
+#Change file/folder ownership (-R recursively traverse down)
+chown -R :<group> <path>			#Change ONLY Group ownership of a file/folder(<path>) to newly <group>
+chown -R <user> <path>				#Change ONLY User ownership of a file/folder(<path>) to newly <user>
+chown -R <user>:<group> <path>		#Change BOTH User and Group ownershipment of a file/folder(<path>) to newly <user> and <group>
+chown -R hadoop:hadoopgrp /home/hadoop

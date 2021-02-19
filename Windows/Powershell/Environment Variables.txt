@@ -1,0 +1,10 @@
+Create a new user variable. Put the Variable_name as HADOOP_HOME and Variable_value as the path of the bin folder where you extracted hadoop as below powershell:
+[System.Environment]::SetEnvironmentVariable('HADOOP_HOME','c:\hadoop\hadoop-3.1.0',[System.EnvironmentVariableTarget]::User)
+[System.Environment]::SetEnvironmentVariable('HADOOP_HOME','c:\hadoop\hadoop-3.1.0',[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::GetEnvironmentVariable('HADOOP_HOME', 'User')
+[System.Environment]::GetEnvironmentVariable('HADOOP_HOME', 'Machine')
+
+[System.Environment]::SetEnvironmentVariable('HDFSCLI_CONFIG','C:\Program Files\Microsoft SQL Server\150\PYTHON_SERVER\Scripts\hdfscli.cfg',[System.EnvironmentVariableTarget]::User)
+[System.Environment]::SetEnvironmentVariable('HDFSCLI_CONFIG','C:\Program Files\Microsoft SQL Server\150\PYTHON_SERVER\Scripts\hdfscli.cfg',[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::GetEnvironmentVariable('HDFSCLI_CONFIG', 'User')
+[System.Environment]::GetEnvironmentVariable('HDFSCLI_CONFIG', 'Machine')

@@ -1,0 +1,146 @@
+Disk
+-----
+Under Linux, each disk is given its own device name. The device files are stored under the "/dev" directory.
+	1-Hard disks start with the name sdX, where X can range from a through z, with each letter representing a physical block device.
+	2-Depending on the implementation/driver, virtual block devices start with names like vdX.
+
+Partition
+---------
+When partitions are created, corresponding device files are created. They take the form of /dev/sdXY (or /dev/vdXY), where X is the device letter (as described in the preceding paragraph) and Y is the partition number.
+
+Volume (LVM / Logical Volume Management)
+---------
+Disk: Is a actual physical Hard Disk device
+Physical volume (PV): This typically refers to the physical hard disk(s) or another physical storage entity, such as a Redundant Array of Inexpensive Disks (RAID) array or iSCSI LUN. Only a single storage entity (for example, one partition) can exist in a PV.
+Volume group (VG): Volume groups are used to house one or more physical volumes and logical volumes into a single administrative unit. A volume group is created out of physical volumes. VGs are simply a collection of PVs; however, VGs are not mountable. They are more like virtual raw disks.
+Logical volume (LV): This is perhaps the trickiest LVM concept to grasp, because logical volumes (LVs) are the equivalent of disk partitions in a non-LVM world. The LV appears as a standard block device. We put file systems on the LV, and the LV gets mounted. The LV gets fscked if necessary. LVs are created out of the space available in VGs. To the administrator, an LV appears as one contiguous partition, independent of the actual PVs from which it is derived.
+Extents: Two kinds of extents can be used: physical extents (PE) and logical extents. Physical volumes (PVs) are said to be divided into chunks, or units of data, called “physical
+ extents.” Logical volumes (LVs) are said to be divided into chunks, or units of data, called "logical extents".
+
+LVM Commands
+-------------
+pvcreate			Initialize a physical volume for use with the LVM system.
+pvdisplay			Display the attributes of physical volumes, such as size and PE size.
+pvs					Shortly Display the attributes of physical volumes, such as size and PE size.
+pvremove			Remove LVM label from Physical volume(s). In case of removing PV from existed VG, it's better to use vgreduce instead of pvremove.
+vgcreate			Create new Volume Groups (VG) from block devices created using the pvcreae command.
+vgextend			Add one or more Physical Volumes (PV) to existing Volume Group (VG) to extend it's size.
+vgdisplay			Display the attributes of Volume Groups (VG)
+vgs					Shortly Display the attributes of Volume Groups (VG)
+vgreduce			Remove Physical Volume (PV) from Volume group (VG)
+vgremove			Remove Volume group (VG)
+lvcreate			Creates a new logical volume in a volume group by allocating logical extents from the free physical extent pool of that volume group.
+lvdisplay			Displays the attributes of a logical volume such as read/write status, size and snapshot information
+lvs					Shortly Displays the attributes of a logical volume such as read/write status, size and snapshot information
+lvresize			Expanding or Shrinking the size of logical volume
+lvextend			Only Expanding the size of logical volume (comparable with lvresize but limited and only used for expanding)
+lvremove			Remove logical volume (LV)
+mkfs				Formatting logical volume (LV)
+resize2fs			Like mkfs but only used when you extending LV size and whant to format extended size like existed LV and append newly formated space to current space
+parted				Partitioning physical disk
+lsblk				list block devices
+fdsik				manage disk and partitions
+
+=================================================== Actions
+lsblk
+---------------
+show you all yoy disks, partitins and lvm's
+
+fdisk
+---------------
+fdisk -l											Show all storage devices and disks information
+
+parted commands
+---------------
+parted <device/disk address>
+print												show disk layout and it's partitions
+mkpart
+	myname
+	xfs
+	0
+	xGB
+set
+quit
+
+fdisk [optional step, you can skip to next step if you want to assigne whole disk (not a partition) to a LVM]
+---------------
+fdisk <physical device/disk address>				Managing physical raw disk
+		-g											initializing disk as GPT
+		-n											create new partition over this disk
+		1											create partition number 1 on this new partition process
+		<ENTER>										start first sector according to default values
+		<ENTER> or +<size>M|G						assigne whole size of disk to this partition (<ENTER>) or assign only specified <size> (in MB or GB scale) from whole disk to this partition
+		-p											show selected disk information
+		-t											change disk type to LVM
+		31											set disk type to 31 (LVM type code)
+		-p											show selected disk information
+		-w											save changes and exit
+
+pvcreate (it is not required but it's better to using fdisk to set disk initilization type like GPT or MBR)
+---------------
+pvcreate <pv_path,is device path or partition path>	Create two physical volumes from raw device
+pvcreate </dev/sda2> </dev/sdb>						Create two physical volumes from a 2nd partition of firt disk and a raw device named sdb
+
+# After executing above command you may encountered with "Device /dev/sdd excluded by a filter." error message, it' because of you have created a new VD using a disk or group of disks that were previously partitioned, you can wipe out the old partition information with "wipefs" as below and then try above command again:
+	wipefs -a </dev/sda2>
+	or
+	wipefs -a </dev/sdb>
+	
+
+vgdisplay
+---------------
+vgdisplay
+OR
+vgdisplay <vg_name>
+
+vgcreate
+---------------
+vgcreate <vg_name> <pv_path>						#Introduces two PV's to a Volume group named <vg_name>
+vgcreate <vg_name> </dev/sda> </dev/sdb>			#Introduces two PV's to a Volume group named <vg_name>
+
+vgextend
+---------------
+vgextend <vg_name> <pv_path>						#extend specified disk
+vgextend <vg_name> </dev/sda>						#extend specified disk
+
+lvcreate
+---------------
+lvcreate -L <size>GB --name <any name for logical volume> <VG name, can be queried from vgdisplay>
+lvcreate -l <nume>% --name <any name for logical volume> <VG name, can be queried from vgdisplay>		#Create a logical volume with size of num% of whole size
+lvcreate -L 1GB --name <logicaal volume name> <VG name, can be queried from vgdisplay>
+lvcreate -L 100M --name <logicaal volume name> <VG name, can be queried from vgdisplay>
+
+lvextend
+---------------
+lvextend -L +<size> <logical volume path>			#get <logical volume path> from lvdisplay
+
+Creating file system (Formating logical volume)
+-----------------------------------------------
+mkfs -t ext4 <logical volume path>					#get <logical volume path> from lvdisplay
+mkfs -t xfs <logical volume path>
+mkfs.xfs <logical volume path>
+mkfs.xfs /dev/fedora/var
+
+resize2fs
+---------------
+resize2fs <existed logical volume path>
+
+mounting formatted LV to a folder
+---------------------------------
+mkdir <dir>
+mount <logical volume path> <dir>					#get <logical volume path> from lvdisplay
+
+lvremove (unmounting LV related folder mount points before removing LV)
+---------------
+lvremove <logical volume path>
+
+vgreduce
+---------------
+vgreduce <vg_name> <pv_path>
+
+pvremove
+---------------
+pvremove <pv_path>
+
+--------------------------Source:
+https://fabianlee.org/2016/07/26/ubuntu-extending-a-virtualized-disk-when-using-lvm/

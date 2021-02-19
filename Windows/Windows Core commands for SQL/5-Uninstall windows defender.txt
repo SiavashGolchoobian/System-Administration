@@ -1,0 +1,2 @@
+--To uninstall windows defender on test environments for better performance:
+Uninstall-WindowsFeature Windows-Defender

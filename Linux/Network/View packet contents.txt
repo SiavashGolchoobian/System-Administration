@@ -1,0 +1,6 @@
+Syntax:
+	tcpdump -e [-nn]
+
+Dump analyze:
+	The start of each line is a timestamp of when the packet was seen. The next two entries in the lines are the source and destination MAC addresses, respectively, for the packet.
+	After the MAC address is the packet’s type. 

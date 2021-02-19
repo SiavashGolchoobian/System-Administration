@@ -1,0 +1,1 @@
+rpcping /s <servername> /t ncacn_ip_tcp

@@ -1,0 +1,9 @@
+/							#root, used a start point of disk browsing
+/boot						#path of linux kernel files and other required utilities for boot the system, specilay in single-user mode (safe mode)
+/usr/lib/systemd/system		#path of Standard Unit configuration files
+/etc/systemd/system			#path of customized or personal Unit configuration files
+/run/systemd/system			#path of transient Unit configuration files during system runtimes
+/var/log					#syslogs
+/proc						#Kernel internal cache info, this mount point is a virtual file system (API based)
+/sys						#Kernel internal cache info, like proc but is widely used in new distros, also this mountpoint as a virtual file system, and all info categorized as folders and files
+/tmp						#TMPFS location, this mount point  in new distros are virtual file systema nd in traditional ditros is disk based file system

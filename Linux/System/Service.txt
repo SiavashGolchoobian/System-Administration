@@ -1,0 +1,34 @@
+Services are located under:
+	/usr/lib/systemd/system		#path of Standard Unit configuration files
+	/etc/systemd/system			#path of customized or personal Unit configuration files
+	/run/systemd/system			#path of transient Unit configuration files during system runtime
+
+#!!!	systemctl is preffered method for service management	 !!!
+
+#-----the <service_name> parameter is *.service filename
+#Service running status
+sudo service <service_name> status
+
+#--Start service
+sudo service <service_name> start
+OR
+sudo systemctl start <service_name>.service
+
+#--Stop service
+sudo service <service_name> stop
+OR
+sudo systemctl stop <service_name>.service
+
+#--Enabling service:
+sudo systemctl enable <service_name>.service
+
+#--Check service enabled/disabled status
+sudo systemctl is-enabled <service_name>.service
+
+#--Disabling service:
+sudo systemctl disable <service_name>.service
+
+#--Units
+sudo systemctl list-units									list all active units
+sudo systemctl list-units --all 							list all active and inactive units
+sudo systemctl list-units --all --type=mount				list all active and inactive units of type mount

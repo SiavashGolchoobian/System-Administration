@@ -1,0 +1,108 @@
+Notes:
+	DNF is the new package manager slated to replace Yum on Red Hat–type distros.
+	Yum is basically a wrapper program for RPM, with great usability enhancements.
+	Yum is an automatic updater and package installer/remover for rpm systems. It automatically computes dependencies and figures out what things should occur to install packages. It makes it easier to maintain groups of machines without having to manually update each one using rpm.
+
+--=================================================== Repository Management
+
+#Install yum software collection
+$ sudo yum install centos-release-scl
+
+#Use EPEL repository
+$ yum install epel-release
+$ sudo yum --disablerepo "*" --enablerepo epel install <packageName>
+
+#Use REMI Repository
+Before you can enable Remi, you need to enable the EPEL repository first, as follows:
+$ yum install epel-release
+$ wget https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+$ rpm -Uvh remi-release-7.rpm
+
+#Use ELRepo Repository
+$ rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+$ rpm -Uvh https://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
+
+--=================================================== Downloading, Installing, Updating and Uninstalling Packages by GUI
+You can launch the package manager GUI from the command line by typing the following:
+$ gnome-software
+
+--=================================================== Downloading, Installing, Updating and Uninstalling Packages by command
+--=====================DNF Package Manager
+
+#Query current repositories
+dnf repoinfo
+OR
+dnf repolist
+
+#Search for a package
+dnf search <PartOfPackageName>
+
+#search for all packages that would satisfy (resolve) a library dependency issue
+dnf whatprovides <packageName>
+
+#Downloading Package
+dnf download <packageName>
+
+#Installing a package and all it's dependencies
+dnf install <packageName>
+dnf -y install <packageName>
+
+#Group installation packages by it's category name
+dnf groupinstall --nogpgcheck "C Development Tools and Libraries"
+
+#Downloading a Package in with all dependencies
+dnf -y install <packageName> --downloadonly --downloaddir=<path>
+
+#Updating all currently installed packages
+dnf -y update --nogpgcheck
+
+#Installing local packages
+dnf install /path/to/file/rpm
+
+--=====================Yum Package Manager
+
+#Search for a package
+yum search <PartOfPackageName>
+
+#Installing a package and all it's dependencies
+yum install <packageName>
+
+#Installing local packages
+yum localinstall /path/to/file/rpm
+
+--=====================RPM Package Manager
+
+#Query currently installed packages
+rpm --query --all
+
+#Query specific packge information
+rpm -qi <packageName>
+
+#Query specific packge related files list
+rpm -ql <packageName>
+
+#Query specific packge related configuration files list
+rpm -qc <packageName>
+
+#To determine what other packages on the system depend on our packageName
+rpm -q --whatrequires <packageName>
+
+#Installing a Package in test(not actual) mode
+rpm --install --verbose --hash --test <packageName>
+
+#Installing a Package in actual mode (without dependencies)
+rpm --install --verbose --hash <packageName>
+
+#Installing local packages
+rpm --install /path/to/file/rpm
+
+#Updating installed packages
+rpm -Uvh --replacepkgs *.rpm
+
+#Uninstall packages
+rpm -e <packageName>
+
+#To validate installed software (detecting package tampering by viruses), in this sample we verifying ls command package
+rpm -Vf /bin/ls
+Or below command to verify all packages
+rpm -Vf

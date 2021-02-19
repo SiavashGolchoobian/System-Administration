@@ -1,0 +1,1 @@
+ping.exe >d:\0_113_to_11_113.txt -t 172.29.1.128 -l 4068 |Foreach{"{0} - {1}" -f (Get-Date),$_}

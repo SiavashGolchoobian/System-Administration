@@ -1,0 +1,4 @@
+1-First, ensure that you are using an administrative shell - you can also install as a non-admin, check out Non-Administrative Installation.
+2-Set-ExecutionPolicy AllSigned
+3-Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+4-If you don't see any errors, you are ready to use Chocolatey! Type choco or choco -? now, or see Getting Started for usage instructions.

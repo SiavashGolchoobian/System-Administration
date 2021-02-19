@@ -1,0 +1,5 @@
+sudo apt-get update						# Fetches the list of available updates
+sudo apt-get upgrade -y					# Installs some updates; does not remove packages
+sudo apt-get dist-upgrade -y				
+sudo apt-get autoremove -y				# Removes any old packages that are no longer needed
+sudo apt-get autoclean -y

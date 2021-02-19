@@ -1,0 +1,4 @@
+#Kernel configuration location for linux distro is located on
+	/boot/config-*
+	
+$Before compiling the kernel install prequ

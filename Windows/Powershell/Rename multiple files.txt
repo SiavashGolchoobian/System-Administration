@@ -1,0 +1,1 @@
+dir | Rename-Item -NewName {"Customer_" + $_.Name}

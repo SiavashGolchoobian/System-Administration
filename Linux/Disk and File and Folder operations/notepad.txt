@@ -1,0 +1,9 @@
+--====================Read file content
+$less <doc path>
+$more <doc path>
+$cat <doc path>
+$vim <doc path>
+
+--====================Help
+$man <command name>
+$info <command name>

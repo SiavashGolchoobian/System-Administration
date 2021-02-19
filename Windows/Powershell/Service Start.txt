@@ -1,0 +1,9 @@
+Get-Service
+Get-Service | where {$_.DisplayName -match "sql"}
+Start-Service -displayname "SQL Server (NODE)"
+Restart-Service -displayname "SQL Server (NODE)"
+Stop-Service -displayname "SQL Server (NODE)"
+
+--Change credential of a service
+$credential = Get-Credential
+Set-Service -Name xxx -Credential $credential

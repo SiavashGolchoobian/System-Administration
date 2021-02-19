@@ -1,0 +1,4 @@
+ip addr
+
+------------Source:
+https://opensource.com/article/18/5/how-find-ip-address-linux

@@ -1,0 +1,14 @@
+-----Using Wmi to Query mount points and volumes
+
+Get-WmiObject -Class Win32_Volume -Filter "DriveType = '3'" | 
+Select-Object -Property DeviceID, DriveType, Label, Caption,
+@{L='FreeSpaceGB';E={"{0:N2}" -f ($_.FreeSpace /1GB)}},
+@{L="CapacityGB";E={"{0:N2}" -f ($_.Capacity/1GB)}}
+
+-----Using Wmi to Query logical disk
+
+Get-WmiObject -Class Win32_logicaldisk -Filter "DriveType = '3'" | 
+Select-Object -Property DeviceID, DriveType, VolumeName, 
+@{L='FreeSpaceGB';E={"{0:N2}" -f ($_.FreeSpace /1GB)}},
+@{L="Capacity";E={"{0:N2}" -f ($_.Size/1GB)}}
+@{L="Capacity";E={"{0:N2}" -f ($_.Size/1GB)}}

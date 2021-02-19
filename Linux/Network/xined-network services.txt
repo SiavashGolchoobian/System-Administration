@@ -1,0 +1,5 @@
+#xinetd is an acronym for "extended Internet services" daemon.
+#xinetd philosophy: Rather than having various programs or daemons always automatically start up during system initialization and remain unused until a connection request arrives, xinetd instead stands in the gap for those programs and listens on their normal service ports. As a result, when xinetd hears a service request meant for one of the services it manages, it starts or spins up the appropriate service.
+#xinetd service has a confige file and a config directory that it's file combined with config file dynamically, file and directories are located at:
+	/etc/xinetd.conf
+	/etc/xinetd.d

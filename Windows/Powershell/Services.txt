@@ -1,0 +1,5 @@
+ps>Get-Service myservicename
+ps>Get-Service | where {$_.DisplayName -match "sql"}
+ps>Stop-Service myservicename
+ps>Start-Service myservicename
+ps>Restart-Service myservicename

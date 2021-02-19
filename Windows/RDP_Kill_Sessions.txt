@@ -1,0 +1,4 @@
+--Query current machine sessions
+c:\xyz>query session /server:172.20.5.91
+--Select your Session ID's that you want to kill and run below command to do it (replace [ID] with selected session ID)
+c:\xyz>reset session [ID] /server:172.20.5.91

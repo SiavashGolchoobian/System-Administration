@@ -1,0 +1,1 @@
+Rename-Item -Path .\OpenSSH-Win64\ -NewName OpenSSH

@@ -1,0 +1,2 @@
+#Mounting an iso file
+$ mount Fedora-Server-dvdx86_64*.iso /media/iso/

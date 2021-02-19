@@ -1,0 +1,17 @@
+fsck :is traditionally scheduled to run very early in the boot sequence. On systemd-enabled systems, the checks are managed by the systemd-fsck@.service and the systemd-fsck-root.service unit files. If the file system is found to be in an unclean state or if a certain number of times has passed in between checks, the system will automatically initiate a file system check at the next startup.
+file systems with journaling capability are ext4, Btrfs, ext3, ReiserFS, JFS, and XFS. these file systems are very robust in disaster scenarios.
+
+#Step 1: After restarting server in GRUB boot menue press "E"
+#Step 2: Select your Linux Kernel to be loaded by keyboard by Going to the end of that line, leave a space, and then add the keyword single (or the letter s) to the end of the line. finally Press CTRL-X to boot the system with the temporary changes you just made. The system should boot the kernel into single-user mode.
+#Step 3: Type root password and press enter.
+#Step 4: You should now effectively be in the systemd rescue.target mode (aka runlevel 1). In this mode, you’ll find that almost all the services that are normally started are not running. This may include network configuration. So if you need to change the IP address, gateway, netmask, or any network-related configuration file, you can. This is also a good time to run fsck manually on any partitions that could not be automatically checked and recovered.
+		 (In the single-user mode of many Linux distributions, only the root partition will be automatically mounted for you. If you need to access any other partitions, you will need to consult /etc/fstab and mount them yourself using the mount command.)
+#Step 5: Once you have made any changes you need to make, simply press CTRL-D. This will exit singleuser mode and continue with the booting process, or you can just issue the reboot command to reboot the system.
+
+
+To run fsck manually on file system (/dev/mapper/fedora-home) followe these steps:
+#Step 1: unmoun the /home because it refferenced (mount point) to /dev/mapper/fedora-home, and you should remove any dependencies before checking the /dev/mapper/fedora-home
+	sudo umount /home
+#Step 2: runc fsck (this is a wrapper tool) or run directly your appropriate fsck tool according to your file system, such as "fsck.ext4" for ext4 file system, "fsck.vfat" for vfat file system, fsck.xfs for cfs types.
+	sudo fsck.ext4 /dev/mapper/fedora-home
+	

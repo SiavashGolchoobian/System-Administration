@@ -1,0 +1,4 @@
+Get-WindowsCapability -Online |? {$_.Name -like "*RSAT*" -and $_.State -eq "NotPresent"} | Add-WindowsCapability -Online
+
+Source:
+http://woshub.com/install-rsat-feature-windows-10-powershell/

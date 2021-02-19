@@ -1,0 +1,18 @@
+Solutin #1 (Mount ISO file to first empty volume):
+	$mySqlImage=Mount-DiskImage -ImagePath "C:\Databases\OLTP\en_sql_server_2017_enterprise_core_x64_dvd_11293037.iso" -StorageType ISO -PassThru
+	$mySqlImage | Get-Volume
+	$driveLetter = ($mySqlImage | Get-Volume).DriveLetter
+	$driveLetter
+Solution #2 (Mount ISO file to folder mount point named SqlSetup):
+	$SqlImage=Mount-DiskImage -ImagePath "C:\Databases\OLTP\en_sql_server_2017_enterprise_core_x64_dvd_11293037.iso" -StorageType ISO -NoDriveLetter -PassThru
+	$Vol = Get-Volume -DiskImage $SqlImage
+	$Drive = Get-WmiObject win32_volume -Filter "Label = '$($Vol.FileSystemLabel)'" -ErrorAction Stop
+	c:\>md SqlSetup
+	$Drive.AddMountPoint('C:\SqlSetup')
+
+
+Example 1: Dismount a disk image by path
+	ps>Dismount-DiskImage -ImagePath "D:\...\file.iso"
+
+Example 2: Dismount a disk image by device path
+	ps>Dismount-DiskImage -DevicePath \\.\CDROM1

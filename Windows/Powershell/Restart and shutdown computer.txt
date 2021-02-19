@@ -1,0 +1,5 @@
+--Reset
+Restart-Computer -Force
+
+--Shutdown
+Stop-Computer -ComputerName "Server01", "Server02", "localhost"

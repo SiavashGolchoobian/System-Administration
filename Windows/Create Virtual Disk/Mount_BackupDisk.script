@@ -1,0 +1,2 @@
+SELECT VDISK file="\\dc-vb-alp01.saipacorp.com\DB-C2-DLV02\Backup_DB-C2-DLV02.vhdx"
+ATTACH VDISK

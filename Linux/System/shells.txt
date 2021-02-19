@@ -1,0 +1,2 @@
+#Usable shells in an os specified in this file:
+/etc/shells

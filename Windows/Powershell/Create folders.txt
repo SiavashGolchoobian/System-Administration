@@ -1,0 +1,2 @@
+--Create required directories in batch
+'F:\Data01','F:\Data02','F:\Log01','F:\TempdbData01','F:\TempdbData02','F:\TempdbData03','F:\TempdbData04','F:\TempdbLog01' | % {New-Item -Path "$_" -Name Databases -ItemType 'Directory'}

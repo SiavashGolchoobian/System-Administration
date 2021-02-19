@@ -1,0 +1,33 @@
+#Check GRUB boot loader version
+rpm -qa | grep -i grub
+
+#Backup the MBR to COPY_OF_MBR file
+dd if=/dev/sda of=/tmp/COPY_OF_MBR bs=512 count=1
+
+#Modifing Boot menu (GRUB2): We change boot menu color in this sample by appending new script to boot scripts collection
+cd /etc/grub.dd
+touch 99_custom.sh
+vim 99_custom.sh
+	#!/bin/sh -e
+	echo "Starting new GRUB2 script creation..."
+	cat <<EOF
+	menuentry "Change Background Color" {
+		set color_normal=white/green
+	}
+	EOF
+chmod +x 99_custom.sh
+grub2-mkconfig
+grep -A 4 "99_custom.sh" /boot/grub2/grub.cfg
+#reboot system
+
+#Creating Bootable Disk (USB) for emergency
+	#Step 1-formating usb device as ext4
+		mkfs.ext4 /dev/sdb1
+	#Step 2-mounting sdb1 device (usb flash) to media/sdb1 path
+		mount /dev/sdb1 /media/sdb1
+	#Step 3-install boot loader on usb flash (mount point)
+		grub2-install  --boot-directory=media/sdb1 /dev/sdb
+	#Step 4-Make a copy(output) from local grub.cfg to usb disk
+		grub2-mkconfig -o /media/sdb1/grub/grub.cfg
+	#Step 5-Unmount usb device
+		umount /dev/sdb1

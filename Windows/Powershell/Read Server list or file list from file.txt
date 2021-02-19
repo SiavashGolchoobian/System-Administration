@@ -1,0 +1,8 @@
+--Copy files from named list to anothr path
+Get-Content c:\databases\filelist.txt | ForEach-Object { Copy-Item "c:\source\pictures\DSC_$_.jpg" c:\target\NewFolder }
+
+--Create directory under E:\Data01\Databases\Data from named list
+Get-Content .\UDB.txt | ForEach-Object {New-Item -Type Directory -Path E:\Data01\Databases\Data -Name $_}
+
+--Set permission on all items in the list
+Get-Content .\UDB.txt | ForEach-Object {Add-NTFSAccess -Path $_ -Account 'LAB\SQL_Service','LAB\SQL_Agent' -AccessRights 'Fullcontrol' -PassThru}

@@ -1,0 +1,5 @@
+Zip:
+Compress-Archive -Path C:\Reference -DestinationPath C:\Archives\Draft.zip
+
+Unzip:
+Expand-Archive -Path Draftv2.Zip -DestinationPath C:\Reference

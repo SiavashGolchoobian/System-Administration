@@ -1,0 +1,15 @@
+Creating a new XFS partition: You can use fdisk to create a new partition
+	fdisk /dev/sdb
+		g
+		p
+		1
+		2048
+		+20G
+		w
+		q
+mkfs.xfs /dev/sdb1
+mkdir /mnt/db
+mount /dev/sdb1 /mnt/db
+
+If you have environment with filesystem above 2 TB , you could try benchmark with mounting with inode64 option.
+mount -o inode64 /dev/sdb1 /mnt/db

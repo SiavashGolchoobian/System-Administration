@@ -1,0 +1,47 @@
+#Write your script such as below in an text editor
+
+#-----Step 1: Writing script
+#!/bin/sh
+#
+#This service send an email every hour to ADDR participantes mail adresses for making a rest to their hands
+set -e
+ADDR=root@localhost
+while true
+do
+	sleep 1h
+	echo "get up and take a break now!" | mailx -s "Carpal tunnel warning" $ADDR
+done
+
+#-----Step 2: Save above file as carpald.sh and set chmod of this file as executable
+chmod 755 carpald.sh
+
+#-----Step 3:move carpald.sh to /usr/local/bin
+sudo mv carpald.sh /usr/local/bin
+
+#-----Step 4:Create a Unit file for executing carpald.sh as a service, open a text editor and write
+[Unit]
+Description=The Carpal notice daemon
+After=syslog.target
+[Service]
+ExecStart=/usr/local/bin/carpald.sh
+Type=simple	#forking, execdbus
+[Install]
+WantedBy=multiuser.target	#poweroff.target, rescue.target, runlevel2.target, multi-user.target, graphical.target, reboot.target, emergency.target
+
+#-----Step 5: Save the text of the script into a file called "carpald.service" and Copy or move the script over to the /etc/systemd/system/ directory where systemd will find it:
+sudo mv carpald.service /etc/systemd/system/
+
+#-----Step 6: Enabling the service:
+sudo systemctl enable carpald.service
+
+#-----Step 7: Now tell systemd about the existence of this new unit file by reloading the systemd daemon:
+sudo systemctl daemon-reload
+
+===================================Type of Units:
+Service units (myfilename.service): These units include traditional system daemons or services. These daemons can be started, stopped, restarted, and reloaded.
+Socket units (myfilename.socket): These units consist of local and network sockets that are used for interprocess communication in a system. They play a very important role in the socket-based activation feature that helps reduce interservice dependencies.
+Device units (myfilename.device): These units allow systemd to see and use kernel devices.
+Mount units (myfilename.mount): These units are used for mounting and unmounting file systems.
+Target units (myfilename.target): systemd uses targets instead of runlevels. Target units are used for the logical grouping of units. They don’t actually do anything by themselves, but instead reference other units, thereby allowing the control of groups of units together.
+Timer units (myfilename.timer): These units are used for triggering activation of other units based on timers.
+Snapshot units (myfilename.snapshot): These units are used to save the state of the set of systemd units temporarily.

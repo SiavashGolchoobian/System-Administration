@@ -1,0 +1,7 @@
+tar [option] -f <compressed file path>
+	-c	create compressed file
+	-x	uncompress a file
+	-v	showing files
+	-z	use gzip algorithm
+	-y	use Bzip2 algorithm
+	-j	use Bzip2 algorithm (replacement of -y in some distro)

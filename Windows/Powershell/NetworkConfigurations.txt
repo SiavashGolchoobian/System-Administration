@@ -1,0 +1,41 @@
+#Query current NIC's
+	Get-NetAdapter
+#Query active NIC's
+	Get-NetAdapter | ? {$_.Status -eq "up"}
+#This cmdlet gets you the network configuration (interfaces, IP addresses and DNS servers).
+	Get-NetIPConfiguration
+#The Get-NetIPInterface cmdlet gets you the IP interfaces, which can include both IPv4 and IPv6 addresses and their associated configurations.
+	Get-NetIPInterface
+#The Set-NetIPInterface allows you to modify IP interfaces settings.
+	Set-NetIPInterface
+#Set the DNS servers that are associated with a particular network interface.
+	Set-DnsClientServerAddress
+#Get current IP address configurations. This can include both IPv4 and IPv6 addresses.
+	Get-NetIPAddress
+#Create and configure an IP address. This can include both IPv4 and IPv6 addresses.
+	New-NetIPAddress
+
+Examples:
+	1-Setting a Static IP Address
+		$IP = "172.21.16.66"
+		$MaskBits = 20
+		$Gateway = "172.21.16.1"
+		$Dns = ("172.20.0.4","172.20.0.10")
+		$IPType = "IPv4"
+		# Retrieve the network adapter that you want to configure
+		$adapter = Get-NetAdapter | ? {$_.Status -eq "up" -and $_.Name -eq "Ethernet"}
+		# Remove any existing IP, gateway from our ipv4 adapter
+		If (($adapter | Get-NetIPConfiguration).IPv4Address.IPAddress) {
+		 $adapter | Remove-NetIPAddress -AddressFamily $IPType -Confirm:$false
+		}
+		If (($adapter | Get-NetIPConfiguration).Ipv4DefaultGateway) {
+		 $adapter | Remove-NetRoute -AddressFamily $IPType -Confirm:$false
+		}
+		 # Configure the IP address and default gateway
+		$adapter | New-NetIPAddress `
+		 -AddressFamily $IPType `
+		 -IPAddress $IP `
+		 -PrefixLength $MaskBits `
+		 -DefaultGateway $Gateway
+		# Configure the DNS client server IP addresses
+		$adapter | Set-DnsClientServerAddress -ServerAddresses $DNS

@@ -1,0 +1,39 @@
+#Create single and multi text filess
+touch <filename>
+touch a b c d e
+touch myfile/{1,2,3,4}
+
+#Create directory (and all path via -p) if not exists
+mkdir -p <path>
+mkdir -p <path1> <path2>
+
+#Copy file (use -R to recursively copy sub directories)
+cp <source file path> <dest file path>
+cp -R <source file path> <dest file path>
+
+#Move or rename a file
+mv <source file path> <dest file path>
+mv names.txt fullnames.txt							--rename file
+mv names.txt /home/himanshu/Downloads				--move file
+mv names.txt /home/himanshu/Downloads/fullnames.txt	--move and rename file
+	
+#delete a directory and all subsequent directories without any question
+rm -rf <path>
+
+#Fin files with size of less than 100k and txt extension
+find . -name '*.txt' -size -100k
+
+#xargs pipe command: you can use it for doing some jobs on pre pipe stdout like deleting log files
+find . -name '*.log' | xargs rm
+
+#disk utilization report
+du -sh [<path>]
+	-s	Summerizes
+	-h	print size in human readable format
+	-k	print size in KB rather than block size
+	-c	produce a grand total at the end of the run
+	
+#disk free space:
+df -h [<path>]
+	-h	print free-space in human readable rather than free blocks
+	-l	lists only the locally mounted file systems

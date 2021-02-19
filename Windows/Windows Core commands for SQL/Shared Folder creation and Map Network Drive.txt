@@ -1,0 +1,26 @@
+------------------------------------------------------STEP 01:Creating a shared folder on server "Wincore2019_DC"
+New-Item "C:\Shared" –type directory
+New-SMBShare –Name "SharedFolder" –Path "C:\Shared" –FullAccess "administrators","siavash"
+OR
+New-SMBShare –Name "SharedFolder" –Path "C:\Shared" `
+ –ContinuouslyAvailable $True`
+ –FullAccess "lab\aministrators","lab\siavash" ` 
+ -ChangeAccess "lab\azdo_service" `
+ -ReadAccess "lab\users"
+
+Get-SmbShare	#Query all shared folders on a server
+------------------------------------------------------STEP 02: Creating a persisted map network drive (S:) on other serves that pointing to "\\Wincore2019_DC\SharedFolder"
+$cred = Get-Credential -Credential lab\siavash
+New-PSDrive -Name "S" -Root "\\Wincore2019_DC\SharedFolder" -Persist -PSProvider "FileSystem" -Credential $cred
+Net Use
+Get-PSDrive -Name "PSDrive", "X"
+OR in case of remote powershell sessions use below commands
+
+Invoke-Command -Session $mySession -ScriptBlock { $cred = Get-Credential -Credential lab\siavash; New-PSDrive -Name "S" -Root "\\Wincore2019_DC\SharedFolder" -Persist -PSProvider "FileSystem" -Credential $cred }
+Invoke-Command -Session $mySession -ScriptBlock { net use }
+
+------------------------------------------------------STEP 03: Removing created map network drive (S:)
+Remove-PSDrive -Name "S"
+------------------------------------------------------STEP 04: Removing Shared folder and its physical folder from "Wincore2019_DC" host
+Remove-SMBShare –Name "SharedFolder"
+Remove-Item C:\Shared\

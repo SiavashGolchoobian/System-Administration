@@ -1,0 +1,10 @@
+--Install psTrustedHosts module on your Windows Admin Center machine
+Install-Module psTrustedHosts
+--Run powershell as admin:
+Import-Module psTrustedHosts
+--Run Windows Remote Management via services
+Set-ExecutionPolicy Unrestricted
+--To get current list of TrustedMachines run:
+Get-Item WSMan:\localhost\Client\TrustedHosts
+--To add new server to list of TrustedMachines run:
+Add-TrustedHost NewServerName

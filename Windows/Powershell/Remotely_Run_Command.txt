@@ -1,0 +1,8 @@
+In Powershell:
+Syntax:
+PS>Invoke-Command -ComputerName <the-remote-pc-name> {
+	any-command
+}
+
+Sample:
+	PS>Invoke-Command -ComputerName PC-05 {gpupdate /force}

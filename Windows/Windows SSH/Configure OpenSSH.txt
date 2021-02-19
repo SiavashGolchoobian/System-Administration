@@ -1,0 +1,77 @@
+-----Install OpenSSH Server on Windows Server 2019:
+0-Inside host machine, You must install latest Windows Server 2019 Cummulative Update, because OpenSSH is inside the CU's !!!
+1-To get the name of the “package” to install, open a Powershell window as administrator and type:
+	Get-WindowsCapability -Online -Name Open*
+2-You’ll see that we have available an Open SSH Server and an Open SSH Client.Let’s start by installing the OpenSSH Server. Type the following in the Powershell window.
+	#In internet connected mode
+		Solution #1:
+			Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+		Solution #2:
+			dism /Online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
+	
+	#In offline mode
+		Solution #1:
+			1-Download the latest OpenSSH for Windows binaries (package OpenSSH-Win64.zip or OpenSSH-Win64.zip) from https://github.com/PowerShell/Win32-OpenSSH/releases
+			2-As the Administrator, extract the package to C:\Program Files\OpenSSH
+				Expand-Archive -Path "C:\Program Files\OpenSSH-Win64.zip" -DestinationPath "C:\Program Files\"
+				Rename-Item -Path .\OpenSSH-Win64\ -NewName OpenSSH
+				Remove-Item "C:\Program Files\OpenSSH-Win64.zip"
+			3-As the Administrator, install sshd and ssh-agent services by going to C:\Program Files\OpenSSH and run:
+				ps>.\install-sshd.ps1
+		Solution #2:
+			in case of windows core, first mount "windows_server_2019_features_on_demand.iso" to server (X:) and then run below command other wise you will get Error code = 0x800f0950:
+			--Add-WindowsCapability -Online -Name ServerCore.AppCompatibility~~~~0.0.1.0 -Source X: -LimitAccess
+			Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0 -Source X: -LimitAccess 
+3-Verify the OpenSSH server installation:
+	Get-Service sshd
+	Get-Service ssh-agent
+4-we need to enable them and set them to start at boot up. For that type:
+	Set-Service sshd -StartupType Automatic
+	Set-Service ssh-agent -StartupType Automatic
+	Start-Service sshd
+	Start-Service ssh-agent
+5-Testing the connection to the SSH server. On another Windows 10 machine, or Linux for that matter, open a command prompt (or terminal) and type:
+	cmd>ssh administrator@Wincoredocker
+6-Open firewall ports
+	Get-NetFirewallRule -Name *SSH* |select Name, DisplayName, Description, Enabled
+	New-NetFirewallRule -DisplayName "SSH TCP on Port 22" -Direction Inbound -LocalPort 22 -Protocol TCP -Action Allow -Profile  Domain, Private, Public
+	New-NetFirewallRule -DisplayName "SSH UDP on Port 22" -Direction Inbound -LocalPort 22 -Protocol UDP -Action Allow -Profile  Domain, Private, Public
+	New-NetFirewallRule -DisplayName "OpenSSH SSH Server" -Direction Inbound -Enabled True -Protocol TCP -Action Allow -LocalPort 22 -Program "C:\Program Files\OpenSSH\sshd.exe" -Name sshd 
+-----Install OpenSSH Client Windows Server 2019:
+1-Back on the Windows Server 2019 computer, at the powershell prompt type:
+	Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+2-Testing the OpenSSH client:
+	ssh user@servername
+3-Get Powershell console
+	powershell.exe
+----Configurations
+You can change default SSH shell to powershell or any other shells by specifying shell path under "HKLM:\SOFTWARE\OpenSSH" path, for example for setting default SSH shell to PS:
+	Get-Command powershell | Format-Table -AutoSize -Wrap
+	New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "<powershellPathFromAboveCommand>" -PropertyType String -Force 
+By default, important OpenSSH components are located in these folders:
+	OpenSSH Server executables: C:\Windows\System32\OpenSSH\ Or  C:\Program Files\OpenSSH
+	The sshd_config file (created after the first service startup): C:\ProgramData\ssh
+	OpenSSH log: C:\windows\system32\OpenSSH\logs\sshd.log Or C:\Program Files\OpenSSH\logs\sshd.log
+	The authorized_keys file and keys: %USERPROFILE%\.ssh\
+You can change your OpenSSH server settings in the config file: %programdata%\ssh\sshd_config. 
+	To deny SSH connection for the specific domain user account (or all domain users), add these directives to the end of the file:
+		DenyUsers woshub\admin@192.168.1.10
+		DenyUsers corp\*
+	To allow SSH connection to the specific domain group only:
+		AllowGroups woshub\sshadmins
+	Or you can allow access to a local group:
+		AllowGroups sshadmins
+	You can deny access to the accounts with the administrator privileges. In this case, if you need to perform any privileged actions in your SSH session, you will have to use runas.
+		DenyGroups Administrators
+	The following directives allow SSH access using RSA keys and passwords (we’ll look on how to use RSA keys to access Windows through SSH in the next article in detail):
+		PubkeyAuthentication yes
+		PasswordAuthentication yes
+	You can change the port OpenSSH receives connections to in the Port directive of the sshd_config file.
+After making any changes to sshd_config file, you need to restart the sshd service:
+	restart-service sshd
+	
+----Source:
+	http://woshub.com/connect-to-windows-via-ssh/
+	https://winscp.net/eng/docs/guide_windows_openssh_server
+	https://github.com/PowerShell/Win32-OpenSSH
+	https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_server_configuration
