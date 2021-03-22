@@ -1,0 +1,164 @@
+
+.------------------------------Registry(ex:hub.docker.com)------------------------------.
+|																						|
+|	.------Repository------.	.------Repository------.	.------Repository------.	|
+|	|		(fedora)		|	|		(mongodb)	   |	|	   (microsoft)	   |	|
+|	|						|	|					   |	|					   |	|
+|	|	-image a			|	|	-image x		   |	|	-image wincore	   |	|
+|	|	-image n			|	|	-image y		   |	|	-image sql		   |	|
+|	.-----------------------.	.----------------------.	.----------------------.	|
+|																						|
+.---------------------------------------------------------------------------------------.
+
+Image (Container Image): is like a Template machine in VM world.
+Container: Is an operational instance of our Image (Container Image), like a new Guest machine create from VM Template machine.
+Registry or Docker Hub: Is the official Docker registry (Repository) from Docker Inc (Company). Also many other registries(hubs) are existed like Quay.io
+Container Registries or Repositories: Are the enterprise IT App Store. Or in another word is a place (Inside the Repository) to store and retrive container images (It could contain private and public images and also each company can have it's own room in this palce).
+Index: An index tracks namespaces and docker repositories. For example, Docker Hub is a centralized index for public repositories
+Docker Swarm: Is a native docker clustering.
+Docker Universal Control Plane: Managing & Monitoring tools of On-Prem and Cloud based Dockers.
+Docker Machine: Provisions Docker hosts/engines.
+Docker Compose: Compose multi-container apps.
+
+*Note1:
+By default, docker pull pulls images from Docker Hub. It is also possible to manually specify the path of a registry to pull from.
+For example, if you have set up a local registry, you can specify its path to pull from it. A registry path is similar to a URL, but does not contain a protocol specifier (https://).
+The following command pulls the testing/test-image image from a local registry listening on port 5000 (myregistry.local:5000):
+docker pull myregistry.local:5000/testing/test-image
+
+-----Commands:
+docker -v: show docker daemon(engine) version
+docker version: show detail info about docker daemon(engine) and docker client version
+docker info: show information about docker service spec.
+docker login <DockerIndex/Hub): login to a docker index(hub) other than default Docker Hub index site, for example:docker login index.docker.io
+docker images: List images on the local registery (Docker Host).
+docker images -a: List all images on the local registery (Docker Host), include intermediate images.
+docker images --tree: [Depricated] show image layers(sub dependent images).
+docker pull <myImageName>: Download myImageName from Docker Hub repository(see above *Note1) to local registery (Docker Host). 
+docker pull <DockerHub:Port/myImageName>:<version>: Download specified version of myImageName from individual <DockerHub> repository that listening on port <Port> to local registery.
+docker run <myImageName>: to instruct and run a new container from specified image.
+docker run --isolation=process <myImageName>: to instruct and run a new container from specified image under Windows "Process Isolation" level, instead of Hyper-V isolation level.
+docker run --isolation=hyperv <myImageName>: to instruct and run a new container from specified image under Windows "Hper-V Isolation" level, instead of OS Process isolation level.
+docker run -d <myImageName>: to run a new container in detached mode (run in background).
+docker run --name <myContainer> -d <myImageName>: to instruct and run a new container from specified image and with specified <myContainer> name only applicable in -d mode.
+docker run -h <myServerName> -d <myImageName>: to instruct and run a new container from specified image and with specified <myServerName> name as Server Host Name.
+docker run --name <myContainer> -h <myServerName> -it <myImageName>: create image with Container name of <myContainer> and Server name of <myServerName> from <myImageName>
+docker run -it <myImageName>: to run a new container in interactive mode.
+docker run -d -p 5000:5000 --restart=always --name myregistry registry:2: This command will create a local/internal Docker Registry container based on "registry" image on port 5000 (you can check you repo by browsing to your servernameOrIp:5000 or containernameOrIp:50000 on your web browser).
+docker run -it -v C:\GuestData01 <myImageName> --name <myContainer>: Create a volume inside the container named <myContainer> as folder mount point with the path of "C:\GuestData01" (you can see physical path of this folder inside your host by docker inspect command).
+docker volume ls: lsit all volumes defined on docker host
+docker volume create --name <volumeName>: this will create a volume on decker host located at "c:\ProgramData\docker\volumes"  as a folder
+docker volume inspect <volumeName>: show folder location and other volume configuration on host machine. 
+docker volume rm <volumeName>: Delete a volume.
+docker run -it --volumes-from=<myAnotherContainer/VolumeObjectName> <myImageName>: Allow access to a volume inside the another container named <myAnotherContainer> as folder mount point with the path of "C:\GuestData01". this access is vallid also if the <myAnotherContainer> is stopped or deleted.
+docker run -it -v D:\HostData01:C:\GuestData01 -v D:\HostData02:C:\GuestData02 <myImageName> --name <myContainer>: Create a volume inside the container named <myContainer> as folder mount point with the path of "C:\GuestData01" that point to host folder path on D:\HostData01.
+docker run -it --mount type=bind,source=D:\HostData01,target=C:\GuestData01 --mount type=bind,source=D:\HostData02,target=C:\GuestData02 <myImageName> --name <myContainer>: Create a volume inside the container named <myContainer> as folder mount point with the path of "C:\GuestData01" that point to host folder path on D:\HostData01.
+docker rm -v <containerId>: Remove volume from container when the container is stopped.
+docker inspect <containerId>: to get runtime config of the specified container such as IP,volumes and many other informations about that container.
+docker ps: List running and stopped container(s).
+docker ps -a: List running and stopped container(s).
+docker ps -l: show last started container.
+docker container start <containerId>: Start stoped container machine.
+docker container attach <containerId>: To connect to started docker machine(container) shell via client console and see it's status. you can exit from attached shell container with Ctrl + P + Q, also you can use Ctrl + C to break the container process and finishing container process (Exit).
+docker exec -it <containerId> cmd.exe: To connect to started docker machine(container) shell via client console and see it's status (it's better than attach command).
+docker container restart <containerId>: Restart container machine.
+docker container stop <containerId>: Stop running container machine.
+docker top <containerId>: return equivallent external PID of container internal running processes(internally from inside of the containers PIDs start from 1).
+docker logs <containerId>: show any logs inside of the container (this command shows output of openning thread on container/stdout)
+docker inspect <containerId>: show low level detailed informations about specified container (located on c:\ProgramData\docker\containers\<ContainerId>\config.v2.json)
+docker kill -s: To kill a container process id 1.
+docker container rm <containerId>, <containerId>, ...: Remove container.
+docker container ls: list currently existed containers.
+docker container ls -a: list all containers.
+docker rm <ContainerId>: Remove container(s)
+decker rmi <ImageId>: Removes image(s) from the local registery (Docker Host).
+docker commit <containerId> <NewImageName>: Takes changes we made and creates a new image from our customized container.
+docker save -o x:\folderpath\myImage.tar <myImageName>: Export(Create) a tar file from our image (or commited container) for transportation purpose to another host(s).
+docker load -i x:\folderpath\myImage.tar: Import docker image from a tar file to current host.
+docker history <myImageName>: show commands used to create images.
+docker build -t helloworld:0.1 .: this command build a new image called helloworld tagged with 0.1 from Dockerfile inside the current folder(.) as below Dockerfile sectionn.
+docker tag <ImageId> <DockerHub:Port/myImageName:Tag>: Create a standard image for publishing to our <DockerHub> that listen on port <Port> with the name of <myImageName:Tag>
+docker push <DockerHub:Port/myImageName:Tag>: Upload an ready image (via "docker tag" command) to our <DockerHub> machine that listen on port <Port or 5000> with the name of <myImageName:Tag>
+docker swarm init --listen-addr 192.168.127.33:2377 --secret ISAPCI: make this node as cluster initiator and manager for future cluster
+docker swarm join --secret ISAPCI \
+			--ca-hash sha256:xxxxxx \
+			192.168.127.33:2377 \
+			--manager \
+			--listen-addr 192.168.127.34:2377
+			Join a new docker (192.168.127.34) as a cluster manager node to existed cluster (192.168.127.33)
+docker swarm join --secret ISAPCI \
+			--ca-hash sha256:xxxxxx \
+			192.168.127.33:2377 \
+			--listen-addr 192.168.127.35:237
+			Join a new docker (192.168.127.35) as a cluster worker node to existed cluster (192.168.127.33)
+docker node promote <myNodeId>: Change <myNodeId> docker node as another cluster manager nodes
+docker node ls: List docker cluster nodes
+routing mwsh: Is a native container award load balancer
+docker service create --name <mySampleServiceName> -p <myHostPort>:<myGuest\ServicePort> --replicas <myNumberOfContainers> <myImageName>: Create docker service
+docker servce scale <mySampleServiceName>=<myNumberOfContainers>: to scaleup or scaledown service containers totaly to <myNumberOfContainers>.
+docker service ls: List docker services
+docker service task <mySampleServiceName>: List continers that used for specified service.
+docker service inspect <mySampleServiceName>: Show <mySampleServiceName> Configs.
+decker node tasks ip-xx-xx-xx-xx: Return services associated to the node.
+RUN: Is a build-time instructuon (then add layers to images)
+CMD: Is only execute at run-time (then run command(s) only when the container is lunched) and equivalent of "Docker run <args> <command>", also you could have only on CMD per Dockerfile else only last one is effective. syntax is CMD ["Command","arg1"]
+ENTRYPOINT
+ENV var=value var=value var=value ...: This expose defined variable as a normal environment variable inside a container
+-----Dockerfile:
+--Sample #1
+#Customized SQL Server Instance
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+MAINTAINER siavash.golchoobian@gmail.com
+RUN mkdir Test
+RUN echo This is a test > c:\Test\Test.txt
+EXPOSE 49149
+CMD ["echo","Hello world, we craeate a test file for you"]
+CMD ["netstart","MSSQLSRV"]
+
+--Sample #2
+#Customized SQL Server Instance
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+MAINTAINER siavash.golchoobian@gmail.com
+RUN mkdir Test \
+	&& echo This is a test > c:\Test\Test.txt
+VOLUME c:\\sqldata01 c:\\sqllog01 c:\\sqlbackup01
+EXPOSE 49149
+CMD ["echo","Hello world, we craeate a test file for you"]
+CMD ["netstart","MSSQLSRV"]
+
+--Sample #3 (download start.ps1 from https://github.com/Microsoft/mssql-docker/blob/master/windows/mssql-server-windows/start.ps1):
+#Step 1: Start from base image mcr.microsoft.com/windows/servercore
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+
+#Step 2: Create temporary directory to hold SQL Server 2017 installation files
+RUN powershell -Command (mkdir C:\SQL2017)
+
+#Step 3: Copy SQL Server 2017 installation files from the host to the container image
+COPY \SQL2017 C:/SQL2017
+
+#Step 4: Install SQL Server 2017 via command line
+RUN C:/SQL2017/SETUP.exe /Q /ACTION=INSTALL /FEATURES=SQLENGINE /INSTANCENAME=MSSQLSERVER 
+/SECURITYMODE=SQL /SAPWD="y0urSecUr3PAssw0rd" /SQLSVCACCOUNT="NT AUTHORITY\System" 
+/AGTSVCACCOUNT="NT AUTHORITY\System" /SQLSYSADMINACCOUNTS="BUILTIN\Administrators" 
+/IACCEPTSQLSERVERLICENSETERMS=1 /TCPENABLED=1 /UPDATEENABLED=False
+
+#Step 5: Set SQL Server service to automatic
+RUN powershell -Command (Set-Service MSSQLSERVER -StartupType Automatic)
+
+#Step 6: Remove SQL Server installation media folder
+RUN powershell -Command (Remove-Item -Path C:/SQL2017 -Recurse -Force) 
+
+#Step 7: Switch shell to PowerShell in preparation for running script Start.ps1
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+#Step 8: Copy Start.ps1 to image on root directory
+COPY \start.ps1 /
+
+#Step 9: Set current working directory for script execution
+WORKDIR /
+
+#Step 10: Run PowerShell script Start.ps1, passing the -ACCEPT_EULA parameter with a value of Y
+CMD .\start.ps1 -ACCEPT_EULA "Y" -Verbose
+
+Source:
+	https://www.mssqltips.com/sqlservertip/5698/create-sql-server-on-windows-docker-container-using-dockerfile--part-6/

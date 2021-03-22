@@ -1,0 +1,2 @@
+1-Install chocolatey
+2-choco install docker-cli

@@ -1,0 +1,93 @@
+---Host:
+Install-WindowsFeature -name Telnet-Client
+docker run -it --mount type=bind,source=C:\Databases\OLTP\Data01,target=C:\GuestData01 --mount type=bind,source=C:\Databases\OLTP\Log01,target=C:\GuestLog01 --expose 49140 --name nikamooz01 -h nikamooz01 -p 49140:49140 mcr.microsoft.com/windows/servercore:ltsc2019
+echo Hello World ! > c:\databasess\oltp\data01\nikamooz.txt
+Get-Content -Path c:\databasess\oltp\data01\nikamooz.txt
+$mySqlImage=Mount-DiskImage -ImagePath "C:\Databases\OLTP\en_sql_server_2017_enterprise_core_x64_dvd_11293037.iso" -StorageType ISO -PassThru
+$mySqlImage | Get-Volume
+$driveLetter = ($mySqlImage | Get-Volume).DriveLetter
+$driveLetter
+Dismount-DiskImage -ImagePath "C:\Databases\OLTP\en_sql_server_2017_enterprise_core_x64_dvd_11293037.iso"
+docker exec -it nikamooz01 powershell
+---Container:
+md Install
+$Password = ConvertTo-SecureString "N!k@m00z" –AsPlainText –Force
+New-LocalUser -Name "SQL" -Password $Password -FullName "SQL svc User" -AccountNeverExpires -PasswordNeverExpires
+---Host:
+docker cp E:\ nikamooz01:C:\Install
+docker cp C:\Databases\OLTP\Config.ini nikamooz01:c:\Install
+---Container:
+Cd Install
+.\setup.exe /Q /ACTION=INSTALL /IACCEPTSQLSERVERLICENSETERMS=1 /PID="6GPYM-VHN83-PHDM2-Q9T2R-KBV83" /ConfigurationFile=C:\install\Config.ini
+Get-Service -Name *SQL*
+
+download ODBC Driver 13+ (https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility?view=sql-server-2017)
+download sqlcmd utility (https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility?view=sql-server-2017)
+install downoaded files:
+
+docker cp c:\databases\msodbcsql_17.4.2.1_x64.msi nikamooz01:C:\install
+docker cp c:\databases\MsSqlCmdLnUtils.msi nikamooz01:C:\install
+
+msiexec /i c:\Install\msodbcsql_17.4.2.1_x64.msi /l*v c:\Install\odbclog.txt /qn
+msiexec /i c:\Install\MsSqlCmdLnUtils.msi /l*v c:\Install\sqlcmdlog.txt /qn
+sqlcmd -S ".\Node" -U sa -P N!k@m00z
+
+function SetPort($instance, $port)
+{
+    # fetch the WMI object that contains TCP settings; filter for the 'IPAll' setting only
+    # note that the 'ComputerManagement14' corresponds to SQL Server 2017
+    $settings = Get-WmiObject `
+        -Namespace root/Microsoft/SqlServer/ComputerManagement14 `
+        -Class ServerNetworkProtocolProperty `
+        -Filter "InstanceName='$instance' and IPAddressName='IPAll' and PropertyType=1 and ProtocolName='Tcp'"
+
+    # there are two settings in a list: TcpPort and TcpDynamicPorts
+    foreach ($setting in $settings)
+    {
+        if ($setting -ne $null)
+        {
+            # set the static TCP port and at the same time clear any dynamic ports
+            if ($setting.PropertyName -eq "TcpPort")
+            {
+                $setting.SetStringValue($port)
+            }
+            elseif ($setting.PropertyName -eq "TcpDynamicPorts")
+            {
+                $setting.SetStringValue("")
+            }
+        }
+    }
+}
+SetPort "NODE" 49140
+Restart-Service -displayname "SQL Server (NODE)"
+sqlcmd -S ".\NODE" -U sa -P N!k@m00z -i C:\GuestData01\restore_db.sql -o C:\GuestData01\restore_db.log
+sqlcmd -S ".\NODE" -U sa -P N!k@m00z
+>shutdown
+>exit
+rm INSTALL
+Stop-Computer
+---Host:
+docker inspect nikamooz01
+docker commit nikamooz01 nikamooz/sql2017:0.2
+docker run -it -v C:\Databases\OLTP\Data01:C:\GuestData01 -v C:\Databases\OLTP\Log01:C:\GuestLog01 --name nikamooz02 -p 49140:49140 nikamooz/sql2017:0.2
+Telnet x.x.x.x 1433
+--======================================================================================
+Host:
+--nikamoozsql2017
+				--Dockerfile
+				--Install
+					--Setup
+						...
+					--start.ps1
+					--Config.ini
+					--Sql2017PortConfig.ps1
+					--msodbcsql_17.4.2.1_x64.msi
+					--MsSqlCmdLnUtils.msi
+Create a folder named nikamoozsql2017
+Create a subfolder named Install
+Copy start.ps1 to that folder
+Extract SQL Iso file and copy that folder to a sunfolder named Setup under Install folder
+Goto nikamoozsql2017 directory and run:
+	tar -cvzf install.tgz Install
+docker build -t nikamooz/sql2017:0.3 .
+docker run -it -v C:\Databases\OLTP\Data01:C:\GuestData01 -v C:\Databases\OLTP\Log01:C:\GuestLog01 --name nikamooz05 -p 49141:49140 nikamooz/sql2017:0.3
