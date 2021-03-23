@@ -1,4 +1,8 @@
-﻿ ----===================================================================(Only on Windows Server 2016+)
+﻿----===================================================================(Only on Windows 10)
+1-Configure Windows Features to enable the Containers feature:
+	Get-WindowsOptionalFeature -Online -FeatureName containers
+	
+ ----===================================================================(Only on Windows Server 2016+)
 1-Configure Windows Features to enable the Containers feature:
 	Install-WindowsFeature -Name Containers
 2-This will install the Docker-Microsoft PackageManagement Provider from the PowerShell Gallery:

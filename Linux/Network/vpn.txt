@@ -1,0 +1,10 @@
+--Use Cisco AnyConnect as vpn tools, Replace vpnserver.com with your server address (for example cuk.dnsfind.net:1397), you can get list of all cisco vpn servers from www.turbov.net/connections.html or by reviewing your turbovpn email content that including list of servers.
+sudo /sbin/modprobe tun
+sudo apt-get install openconnect
+sudo openconnect vpnserver.com
+--Type your vpn user name and password
+--Open a new terminal with same linux account as previous and do your work
+--For disconnectig from vpn press Ctrl+Z on VPN terminal
+
+--Source:
+http://www.turbov.net/support/%D8%B1%D8%A7%D9%87%D9%86%D9%85%D8%A7%DB%8C-cisco-anyconnect-%D8%AF%D8%B1-%D9%84%DB%8C%D9%86%D9%88%DA%A9%D8%B3/

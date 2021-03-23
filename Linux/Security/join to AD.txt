@@ -3,9 +3,16 @@ STEP 01: Start by updating your Ubuntu / Debian Linux system.This is essential a
 	sudo apt -y update
 	
 STEP 02: For Ubuntu 20.04|18.04, add the following repositories to your sources.list file.
+--For Ubuntu 18 use below command
 sudo tee -a /etc/apt/sources.list <<EOF
 deb http://us.archive.ubuntu.com/ubuntu/ bionic universe
 deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates universe
+EOF
+
+--And For Ubuntu 20 use this command
+sudo tee -a /etc/apt/sources.list <<EOF
+deb http://us.archive.ubuntu.com/ubuntu/ groovy universe
+deb http://us.archive.ubuntu.com/ubuntu/ groovy-updates universe
 EOF
 
 STEP 03: make sure that the same DNS IP addresses (as above STEP 00) and the domain name are added to /etc/resolv.conf file.

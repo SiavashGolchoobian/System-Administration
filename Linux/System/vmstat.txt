@@ -1,0 +1,281 @@
+What is vmstat?
+
+vmstat is a tool that collects and reports data about your system’s memory, swap, and processor resource utilization in real time. It can be used to determine the root cause
+of performance and issues related to memory use.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+How to Use vmstat and How to Interpret vmstat Output?
+
+Use the vmstat command to run the program. Consider the following output:
+
+$ vmstat
+procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
+ 0  0   3532 148760  50700 1397880    0    0     1     2    6    6  3  1 97  0
+
+Important Note: 
+
+The memory information isn't averaged; vmstat shows the instantaneous memory information as provided in /proc/meminfo. 
+So you can use the memory information from vmstat without worrying about changes since the last boot.
+
+The values that are accumulated since boot concern the CPU usage, interrupts and context switches, and swap in/out and pages in/out; 
+these are never reset. You can read the raw values from /proc/stat and /proc/vmstat if you want to be able to calculate your own 
+deltas. For example, si is pswpin from /proc/vmstat, bi is pgpgin from /proc/vmstat.
+
+Often, the following form of the command is used:
+
+vmstat [interval] [count]
+
+In this example, the first line of data provides the average since the last boot time. Subsequent reports, until [count] is reached, report data on the current state of the 
+system every [interval] seconds.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Procs:
+
+The r and b values are calculated by traversing the /proc filesystem and reading the stat file on each process i.e. /proc/<PID>/stat. 
+Within the stat file, one field is extracted; field three (state). If the state field is in a running state, denoted by ‘R’, then 
+the runnables counter is incremented. And if the state is ‘D’ then the uninterruptible counter is incremented; all other states are 
+ignored. For a full list of states, run man 5 proc.
+
+What is an uninterruptible sleep state? An uninterruptible sleep state is one that will not handle a signal right away. 
+The process resumes only if the waited-upon resource becomes available or if a timeout occurs during that wait (if the timeout is 
+specified when the process is put to sleep). The uninterruptible sleep state is mostly used by device drivers waiting for disk or 
+network IO. When the process is sleeping uninterruptibly, signals accumulated during the sleep are evaluated when the process resumes.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Memory:
+
+swpd: the amount of virtual memory used. In other words, how much memory has been swapped out.
+free: the amount of idle memory.
+buff: the amount of memory used as buffers.
+cache: the amount of memory used as cache.
+
+The swpd field indicates how much swap space has been used; this value increases when your systems physical memory is full and the 
+Linux kernel starts to use the swap partition/file. When the systems physical memory and swap space has been exhausted, 
+the Linux OOM (Out Of Memory) killer executes and kills process(es) that are consuming the largest amounts of memory. 
+This swpd value is retrieved by traversing the /procfilesystem and reading the stat file on each process. The free field indicates 
+how much memory has not been allocated. The buff fields indicates temporary storage for raw disk blocks. The cache field shows 
+in-memory cache for files read from disk; the Linux kernel will use available memory for disk caching, unless it’s required by a 
+running program. Both buff and cache values are retrieved from /proc/meminfo.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Swap:
+
+si: Amount of memory swapped in from disk (/s).
+so: Amount of memory swapped to disk (/s).
+
+The si and so fields indicate that the systems physical memory is full and the swap partition/file is being used.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+IO:
+
+bi: Blocks received from a block device (blocks/s).
+bo: Blocks sent to a block device (blocks/s).
+
+The bi and bo fields indicate the number of blocks being read from disk and block being written to disk, as shown in the High IO 
+Write Load example and High IO Read Load example.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+System:
+
+in: The number of interrupts per second, including the clock.
+cs: The number of context switches per second.
+
+The interrupts and context switch values are read from the /proc/stat file; The values are then manipulated to give you the current 
+values rather than the values since the system booted.
+
+duse= *cpu_use + *cpu_nic;  /* CPU USER + CPU NICE   */
+dsys= *cpu_sys + *cpu_iow;  /* CPU SYSTEM + CPU WAIT */
+didl= *cpu_idl;             /* CPU IDLE              */
+Div= duse+dsys+didl;
+hz=Hertz; /* get ticks/s from libproc */
+divo2= Div/2UL;
+printf(format,
+...
+...
+ (unsigned)( (*inter                 * hz + divo2) / Div ),
+ (unsigned)( (*ctxt                  * hz + divo2) / Div ),
+...
+...
+
+So what is the context switch referring to? Context switching is where the Linux scheduler removes the currently running task from 
+the CPU and switch it out with another task that is scheduled to be run; this is is handled by the __schedule() function defined in 
+kernel/sched/core.c.
+
+What are interrupts? An interrupt is simply a signal that the hardware can send when it wants the processor’s attention. 
+A common example of this is when a packet is received by the network card; when a packet is received, an interrupt is thrown and the 
+CPU deals with the packet; you can list all the interrupts that have occurred on your system by viewing the /proc/interrupts file.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+CPU:
+
+The CPU column provides an overview of where most of the CPU time is spent. These values are retrieved from the /proc/stat file.
+
+us: Time spent running non-kernel code
+sy: Time spent running kernel code
+id: Time spent idle
+wa: Time spent waiting for I/O
+st: Time stolen from a virtual machine
+
+The us field represents the CPU time spent in user space, where normal processes such as Nginx run. The sy field represents the CPU 
+time spent in kernel space; this is for processes similar to kworker, which executes in kernel space. The id field represents the 
+CPU idle time. The wa field represents the CPU time spent waiting for I/O, usually disk or network; a common issue where you might 
+see this value increase is if an NFS mount point has been mounted with hard options and the mount-point has become stale, which is 
+elaborated in our examples. The final field st represents the percentage of time a virtual CPU waits for a real CPU while the 
+hypervisor is servicing another virtual processor. Essentially, the steal time cycle counts the amount of time that your virtual 
+machine is ready to run but could not run due to other virtual machines competing for the CPU.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+vmstat Commands:
+
+vmstat is often run with an interval of 1 second for a small number of seconds depending on kind of problem the administrator is trying to diagnose. The following example illustrates an interval of one (1) second twenty (20) times:
+
+$ vmstat 1 20
+procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
+ 0  0   3996 168488  57100 1368636    0    0     1     2    0    0  3  1 97  0
+ 0  0   3996 168604  57100 1368728    0    0     0     0  144  303  1  0 100  0
+ 0  0   3996 168604  57100 1368984    0    0   256     0  162  464  1  0 99  0
+ 0  0   3996 168604  57100 1368972    0    0     0     0  239  638  3  0 97  0
+ 0  0   3996 168604  57100 1368952    0    0     0     0  242  529  1  1 99  0
+ 0  0   3996 168604  57100 1368952    0    0     0     0  148  430  1  0 99  0
+...
+
+You may run vmstat without a [count] argument if you want ongoing reports of the system’s status in real time. In these cases, intervals of 30 seconds or more may be desirable.
+
+$ vmstat 30
+procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
+ 0  0   3996 167868  57108 1369788    0    0     1     2    0    0  3  1 97  0
+ 0  0   3996 167860  57108 1369920    0    0     0     0  274  604  2  0 98  0
+
+In the default operation, vmstat displays memory statistics in kilobytes. vmstat considers a single kilobyte equal to 1024 bytes. To generate vmstat reports where 1 kilobyte is equal to 1000 bytes, use the following form:
+
+$ vmstat -S k 1 10
+procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
+ 0  0   4091 150192  58982 1422041    0    0     1     2    0    0  3  1 97  0
+ 0  0   4091 150183  58982 1422381    0    0   256     0  201  518  1  0 99  0
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Examples:
+
+The majority of the examples shown below have been taken from the RedHat article
+
+1- CPU User Load
+
+A standard audio file will be encode as an MP3 file by means of the lame encoder in this example. This process is quite CPU 
+intensive and also demonstrates the execution of vmstat in parallel with a user CPU time of 97%
+
+$ vmstat 1 5
+procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu------
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 6  1      0 302380  16356 271852    0    0   561   568   80  590 43  7 43  7  0
+ 1  0      0 300892  16364 273256    0    0     0    52   79  274 97  3  0  0  0
+ 2  0      0 299544  16364 274532    0    0     0     0   78  372 97  3  0  0  0
+ 1  0      0 298292  16368 275780    0    0     0     0   53  255 97  3  0  0  0
+ 1  0      0 296820  16368 277192    0    0     0     0   77  377 97  3  0  0  0
+
+2- CPU System Load
+
+In this example, a file will be filled with random content using dd.
+
+$ dd if=/dev/urandom of=500MBfile bs=1M count=500
+
+For this, /dev/urandom will supply random numbers, which will be generated by the kernel. This will lead to an increased load on the CPU (sy – system time). At the same time, the vmstat executing in parallel will indicate that between 93% and 97% of the CPU time is being used for the execution of kernel code (for the generation of random numbers, in this case).
+
+$ vmstat 1 5
+procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu------
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 2  0 402944  54000 161912 745324    5   14    54    59  221  867 13  3 82  2  0
+ 1  0 402944  53232 161916 748396    0    0     0     0   30  213  3 97  0  0  0
+ 1  0 402944  49752 161920 751452    0    0     0     0   28  290  4 96  0  0  0
+ 1  0 402944  45804 161924 755564    0    0     0     0   29  188  2 98  0  0  0
+ 1  0 402944  42568 161936 758608    0    0     0 17456  272  509  7 93  0  0  0
+
+3- RAM Bottleneck (swapping)
+
+In this example, many applications will be opened (including VirtualBox with a Windows guest system, among others). 
+Almost all of the working memory will be used. Then, one more application (OpenOffice) will be started. The Linux kernel will then 
+swap out several memory pages to the swap file on the hard disk, in order to get more RAM for OpenOffice. Swapping the memory pages
+to the swap file will be seen in the so (swap out — memory swapped to disk) column as vmstat executes in parallel.
+
+$ vmstat 1 5
+procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu------
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 3  1 244208  10312   1552  62636    4   23    98   249   44  304 28  3 68  1  0
+ 0  2 244920   6852   1844  67284    0  544  5248   544  236 1655  4  6  0 90  0
+ 1  2 256556   7468   1892  69356    0 3404  6048  3448  290 2604  5 12  0 83  0
+ 0  2 263832   8416   1952  71028    0 3788  2792  3788  140 2926 12 14  0 74  0
+ 0  3 274492   7704   1964  73064    0 4444  2812  5840  295 4201  8 22  0 69  0
+
+4- High IO Read Load
+
+A large file (such as an ISO file) will be read and written to /dev/null using dd.
+
+$ dd if=bigfile.iso of=/dev/null bs=1M
+
+Executed in parallel, vmstat will show the increased I/O read load (the bi value).
+
+$ vmstat 1 5
+procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu------
+r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+3  1 465872  36132  82588 1018364    7   17    70   127  214  838 12  3 82  3  0
+0  1 465872  33796  82620 1021820    0    0 34592     0  357  781  6 10  0 84  0
+0  1 465872  36100  82656 1019660    0    0 34340     0  358  723  5  9  0 86  0
+0  1 465872  35744  82688 1020416    0    0 33312     0  345  892  8 11  0 81  0
+0  1 465872  35716  82572 1020948    0    0 34592     0  358  738  7  8  0 85  0
+
+5- High IO Write Load
+
+In contrast with the previous example, dd will read from /dev/zero and write a file. The oflag=dsync will cause the data to be 
+written immediately to the disk (and not merely stored in the page cache).
+
+$ dd if=/dev/zero of=500MBfile bs=1M count=500 oflag=dsync
+
+Executed in parallel, vmstat will show the increased I/O write load (the bo value).
+
+procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu------
+r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+1  1      0  35628  14700 1239164    0    0  1740   652  117  601 11  4 66 20  0
+0  1      0  34852  14896 1239788    0    0     0 23096  300  573  3 16  0 81  0
+0  1      0  32780  15080 1241304    0    0     4 21000  344  526  1 13  0 86  0
+0  1      0  36512  15244 1237256    0    0     0 19952  276  394  1 12  0 87  0
+0  1      0  35688  15412 1237180    0    0     0 18904  285  465  1 13  0 86  0
+
+CPU Waiting for IO
+
+In the following example, an updatedb process is already running. The updatedb utility is part of mlocate. It examines the entire 
+file system and accordingly creates the database for the locate command (by means of which file searches can be performed very 
+quickly). Because updatedb reads all of the file names from the entire file system, the CPU must wait to get data from the I/O 
+system (the hard disk). For that reason, vmstat running in parallel will display large values for wa (waiting for I/O):
+
+$ vmstat 1 5
+procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu------
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 2  1 403256 602848  17836 400356    5   15    50    50  207  861 13  3 83  1  0
+ 1  0 403256 601568  18892 400496    0    0  1048   364  337 1903  5  7  0 88  0
+ 0  1 403256 600816  19640 400568    0    0   748     0  259 1142  6  4  0 90  0
+ 0  1 403256 600300  20116 400800    0    0   476     0  196  630  8  5  0 87  0
+ 0  1 403256 599328  20792 400792    0    0   676     0  278 1401  7  5  0 88  0
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+To get statistics for a specific partition:
+
+vmstat -p sda1
+
+sda1          reads   read sectors  writes    requested writes
+           121325752 15317901973   29690887 1046415289
+
+
+

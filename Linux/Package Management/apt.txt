@@ -1,3 +1,10 @@
+--Search online repo for a package
+apt search packagenameOrPartialNameOfPackage
+apt search vpn
+
+--Install a package
+sudo apt-get install PackageName
+
 --Update the Repositories
 sudo apt update
 sudo apt upgrade

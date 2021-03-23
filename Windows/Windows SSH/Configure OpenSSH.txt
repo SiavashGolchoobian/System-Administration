@@ -42,6 +42,8 @@
 	Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
 2-Testing the OpenSSH client:
 	ssh user@servername
+	OR
+	ssh domain.com\user@servername
 3-Get Powershell console
 	powershell.exe
 ----Configurations

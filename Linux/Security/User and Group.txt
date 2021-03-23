@@ -69,3 +69,6 @@ groupmod -n <newname> <groupname>
 
 #Delete a group
 groupdel <groupname>
+
+#Add a user to sudoers group
+usermod -aG sudo <username>
