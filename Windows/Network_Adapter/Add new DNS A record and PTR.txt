@@ -1,0 +1,1 @@
+Add-DnsServerResourceRecordA -Name "host23" -ZoneName "lab.com" -AllowUpdateAny -IPv4Address "192.168.136.135" -TimeToLive 01:00:00

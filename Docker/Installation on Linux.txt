@@ -2,21 +2,23 @@
 1-Configure Windows Features to enable the Containers feature:
 	Get-WindowsOptionalFeature -Online -FeatureName containers
 	
- ----===================================================================(Only on Windows Server 2016+)
-1-Configure Windows Features to enable the Containers feature:
-	Install-WindowsFeature -Name Containers
-2-This will install the Docker-Microsoft PackageManagement Provider from the PowerShell Gallery:
-	Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
-3-Install the latest version of Docker on Window Server 2019 that includes Docker Engine and the Docker client and It is required in order to work with Windows containers,(This may take long time to download and install this package, also you should use VPN or Proxy servers if you are connected from Iran):
-	Install-Package -Name docker -ProviderName DockerMsftProvider
-4-When the installation is complete, reboot the computer:
-	Restart-Computer -Force
-5-This sets up Docker as a Windows Service, which you need to start:
-	ps>Start-Service docker
-6-Check Docker service is running via servies.msc or:
-	ps>Get-Service docker
-	or below command to see status and logon account of the service
-	Get-WmiObject Win32_Service | Where-Object {$_.Name -match "docker"} | select Name, DisplayName, StartName, State
+ ----===================================================================(Only on Linux)
+1-Uninstall old versions: Older versions of Docker were called docker, docker.io, or docker-engine. If these are installed, uninstall them:
+	sudo apt-get remove docker docker-engine docker.io containerd runc
+2-Update the apt package index and install packages to allow apt to use a repository over HTTPS:
+	sudo apt-get update
+	sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+3-Add Docker’s official GPG key:
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+4-Use the following command to set up the stable repository:
+	echo \
+  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+5-Next, update the package database with the Docker packages from the newly added repo:
+	sudo apt update
+6-Install Docker Engine (First using your VPN because of iran sanctions):
+	sudo apt-get update
+	sudo apt-get install docker-ce docker-ce-cli containerd.io
 7-Installed Docker version can be checked with:
 	ps>docker version
 8-Great, now that we have Docker installed on our server, it is time to verify few basic things. Issue “Docker Info” command to get information related to docker installation we just finished. 

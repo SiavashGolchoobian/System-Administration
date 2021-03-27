@@ -1,15 +1,28 @@
-STEP 00: Configure your guest network static ip and dns servers (as discribed in "network configuration.txt")
+STEP 00: 
+	Configure your guest network static ip and dns servers (as discribed in "network configuration.txt")
+	Configure your host name (as desribed in "host name.txt")
+		sudo hostnamectl set-hostname myserver.lab.com
 STEP 01: Start by updating your Ubuntu / Debian Linux system.This is essential as installations may fail if the server is a freshly installed.
 	sudo apt -y update
 	
 STEP 02: For Ubuntu 20.04|18.04, add the following repositories to your sources.list file.
---For Ubuntu 18 use below command
+--Get your linux release name via below command:
+lsb_release -cs
+
+--Copy above command output (release name) and place it in bellow template (replace <releaseName>)
+--For any ubuntu linux use below command template
+sudo tee -a /etc/apt/sources.list <<EOF
+deb http://us.archive.ubuntu.com/ubuntu/ <releaseName> universe
+deb http://us.archive.ubuntu.com/ubuntu/ <releaseName>-updates universe
+EOF
+
+--Example: For Ubuntu 18 use below command
 sudo tee -a /etc/apt/sources.list <<EOF
 deb http://us.archive.ubuntu.com/ubuntu/ bionic universe
 deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates universe
 EOF
 
---And For Ubuntu 20 use this command
+--Example: For Ubuntu 20 use this command
 sudo tee -a /etc/apt/sources.list <<EOF
 deb http://us.archive.ubuntu.com/ubuntu/ groovy universe
 deb http://us.archive.ubuntu.com/ubuntu/ groovy-updates universe
@@ -45,29 +58,29 @@ STEP 07: Query/Discover Active Directory domain on Debian 10 / Ubuntu 20.04|18.0
 	sudo realm discover lab.com
 STEP 08: Join Ubuntu 20.04|18.04 / Debian 10 To Active Directory (AD) domain
 	sudo realm join -U Administrator lab.com
+	realm list
 	Create AAA record of joined machine manually in DNS server!
-STEP 09: The last important configuration required is represented by time synchronization. Install ntpdate package, query and sync time with the AD DC by issuing the below commands.
-	sudo apt-get install ntpdate
-	sudo ntpdate -q lab.com
-	sudo ntpdate lab.com
-STEP 10: [ATTENTION to OS Version] On RHEL based systems, user’s home directory will be created automatically. On Ubuntu / Debian, you need to enable this feature (Now we need to to set up a creation of Home Dirs for AD users when they log in.).
+STEP 09: [ATTENTION to OS Version] On RHEL based systems, user’s home directory will be created automatically. On Ubuntu / Debian, you need to enable this feature (Now we need to to set up a creation of Home Dirs for AD users when they log in.).
 	sudo nano /etc/pam.d/common-session
 	#add this line in the end of file
 	session optional pam_mkhomedir.so skel=/etc/skel/ umask=077
-STEP 11: Then activate with (after executing command on GUI select check box "activate mkhomedir" or "create home directory on logon" by pressing space bar on this choice and press OK):
+STEP 10: Then activate with (after executing command on GUI select check box "activate mkhomedir" or "create home directory on logon" by pressing space bar on this choice and press OK):
 	sudo pam-auth-update
-STEP 12: Your sssd.conf configuration file is located at /etc/sssd/sssd.conf. Whenever there is a change in the file, restart is required.
+STEP 11: Your sssd.conf configuration file is located at /etc/sssd/sssd.conf. Whenever there is a change in the file, restart is required.
 	sudo systemctl restart sssd
 	
 	Status should be running:
 	
 	systemctl status sssd
 	realm list					#see some info about our newly joined domain:
-STEP 13: Enable systemd-resolved service
+STEP 12: Enable systemd-resolved service (THIS STEP SHOULD BE IGNORED IF EVERYTHING IS CORRECT !)
 	systemctl status systemd-resolved
 	sudo systemctl enable systemd-resolved
 	sudo systemctl start systemd-resolved
-	
+STEP 13: The last important configuration required is represented by time synchronization. Install ntpdate package, query and sync time with the AD DC by issuing the below commands.
+	sudo apt-get install ntpdate
+	sudo ntpdate -q lab.com
+	sudo ntpdate lab.com
 STEP 14: Now let’s check if we can get information about the AD user. Replace ‘user’ with the name of the domain user account.
 	id siavash@lab.com
 	

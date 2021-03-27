@@ -44,7 +44,7 @@ fdsik				manage disk and partitions
 =================================================== Actions
 lsblk
 ---------------
-show you all yoy disks, partitins and lvm's
+show you all your disks, partitins and lvm's
 
 fdisk
 ---------------
@@ -85,7 +85,12 @@ pvcreate </dev/sda2> </dev/sdb>						Create two physical volumes from a 2nd part
 	wipefs -a </dev/sda2>
 	or
 	wipefs -a </dev/sdb>
-	
+
+pvresize(Expand lvm partition)	
+---------------
+pvresize <pv_path>
+pvresize /dev/sda
+pvresize /dev/sda3									#Exend pv to whole sda3 partition size
 
 vgdisplay
 ---------------
@@ -113,6 +118,7 @@ lvcreate -L 100M --name <logicaal volume name> <VG name, can be queried from vgd
 lvextend
 ---------------
 lvextend -L +<size> <logical volume path>			#get <logical volume path> from lvdisplay
+lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv		#expand /dev/ubuntu-vg/ubuntu-lv size to all remaining free space on vg
 
 Creating file system (Formating logical volume)
 -----------------------------------------------
@@ -121,9 +127,13 @@ mkfs -t xfs <logical volume path>
 mkfs.xfs <logical volume path>
 mkfs.xfs /dev/fedora/var
 
-resize2fs
+Extend the File System (resize2fs and xfs_growfs)
 ---------------
-resize2fs <existed logical volume path>
+For Ext4:
+	resize2fs <existed logical volume path>
+For xfs:
+	xfs_growfs <mount point>
+	xfs_growfs /root
 
 mounting formatted LV to a folder
 ---------------------------------
@@ -144,3 +154,6 @@ pvremove <pv_path>
 
 --------------------------Source:
 https://fabianlee.org/2016/07/26/ubuntu-extending-a-virtualized-disk-when-using-lvm/
+https://carleton.ca/scs/2019/extend-lvm-disk-space/
+https://www.ryadel.com/en/resize-extend-disk-partition-unallocated-disk-space-linux-centos-rhel-ubuntu-debian/
+https://www.tecmint.com/extend-and-reduce-lvms-in-linux/

@@ -1,0 +1,24 @@
+Alright, I assume that you tried to format and/or mount the 3rd (root) partition. You have to leave it unformatted and unmounted, this way the option for LVM remains.
+
+NOTE: When you create the Logical Volumes inside of your Volume Group make sure to format and mount them, otherwise the installer will fail.
+At the Storage Configuration step, move to AVAILABLE DEVICES and make the following changes:
+	1-Create EFI or BIOS partition: 
+		Under "AVAILABLE DEVICES" select your storage device (ex: /dev/sda), and from it's options select "Use As Boot Device".
+	2-Create boot partition:
+		Under "AVAILABLE DEVICES" select your storage device (ex: /dev/sda), and from it's options select "Add GPT Partition"
+		set the size (ex: 1G), format as ext4 and mount at /boot.
+	3-Create root partition:
+		Under "AVAILABLE DEVICES" select your storage device (ex: /dev/sda), and from it's options select "Add GPT Partition", leave size empty (uses remaining disk space), do NOT format and do NOT mount (leave both options as unformatted/leave unmounted).
+	4-Create Volume Group:
+		Under "AVAILABLE DEVICES" select "Create volume group (LVM)"
+		name it (ex: ubuntu-vg)
+		and select partition 3 with the checkbox.
+	5-Create Swap Logical Volume(s):
+		Under "AVAILABLE DEVICES" select the newly created Volume Group (ex: ubuntu-vg)
+		select "Create Logical Volume", name it "swap-lv", set size twice of your RAM
+		set format to "swap"
+	6-Create root Logical Volume(s):
+		Under "AVAILABLE DEVICES" select the newly created Volume Group (ex: ubuntu-vg)
+		select "Create Logical Volume", name it "ubuntu-lv", set size (or blank for remaining disk space), format it and mount it.
+		set format to xfs or ext4
+    7-Repeat step 6 for all the Logical Volumes you want to create.

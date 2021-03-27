@@ -45,9 +45,13 @@ mkfs.xfs <partition path>
 mkfs -t ext4 /dev/sdb1
 mkfs.xfs /dev/sdb1
 
-resize2fs
+Extend the File System (resize2fs and xfs_growfs)
 ---------------
-resize2fs <partition path>
+For Ext4:
+	resize2fs <partition path>
+For xfs:
+	xfs_growfs <mount point>
+	xfs_growfs /root
 
 mounting formatted LV to a folder
 ---------------------------------
