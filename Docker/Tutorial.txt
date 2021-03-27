@@ -46,8 +46,8 @@ docker run --name <myContainer> -h <myServerName> -it <myImageName>: create imag
 docker run -it <myImageName>: to run a new container in interactive mode, you can use Ctrl+P+Q to exit from container interactive console mode.
 docker run -d -p 5000:5000 --restart=always --name myregistry registry:2: This command will create a local/internal Docker Registry container based on "registry" image on port 5000 (you can check you repo by browsing to your servernameOrIp:5000 or containernameOrIp:50000 on your web browser).
 docker run -it -v C:\GuestData01 <myImageName> --name <myContainer>: Create a volume inside the container named <myContainer> as folder mount point with the path of "C:\GuestData01" (you can see physical path of this folder inside your host by docker inspect command).
-docker attach <containerId>: Connect to running container console
-docker volume ls: lsit all volumes defined on docker host
+docker run -it -v ${PWD}:/data <myImageName> --name <myContainer>: Create a volume inside the container named <myContainer> as folder mount point to linux server with the path of "/data" that linked to physical windows host on current directory (PWD).
+docker volume ls: list all volumes defined on docker host
 docker volume create --name <volumeName>: this will create a volume on decker host located at "c:\ProgramData\docker\volumes"  as a folder
 docker volume inspect <volumeName>: show folder location and other volume configuration on host machine. 
 docker volume rm <volumeName>: Delete a volume.
@@ -60,6 +60,7 @@ docker ps: List running and stopped container(s).
 docker ps -a: List running and stopped container(s).
 docker ps -l: show last started container.
 docker container start <containerId>: Start stoped container machine.
+docker attach <containerId>: Connect to running container console (Same as "docker container attach")
 docker container attach <containerId>: To connect to started docker machine(container) shell via client console and see it's status. you can exit from attached shell container with Ctrl + P + Q, also you can use Ctrl + C to break the container process and finishing container process (Exit).
 docker exec -it <containerId> cmd.exe: To connect to started docker machine(container) shell via client console and see it's status (it's better than attach command).
 docker pause <containerId>: pause a running container
