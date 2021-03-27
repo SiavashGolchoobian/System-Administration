@@ -1,0 +1,2 @@
+su <username>			#make a subshell for <username> and switch to it, like windows Run As <username>
+si -l <username>		#completly switching the shell and session to <username>, like windows switch login

@@ -1,0 +1,2 @@
+#Show history of executed command by current user
+history

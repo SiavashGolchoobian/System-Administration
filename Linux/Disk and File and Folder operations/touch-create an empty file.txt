@@ -1,0 +1,2 @@
+#Change file timestamp(access time) or create a new empty file if specified file does not exists
+touch <filename>

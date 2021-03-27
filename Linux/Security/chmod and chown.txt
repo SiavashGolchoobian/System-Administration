@@ -3,9 +3,11 @@ letter	permission	Value
 ------	----------	------
 r		read		4
 w		write		2
-x		execute		1
+x		execute		1			#Delete is a kind of x(execute) operation and does not control with r or w
 
-chmod [-R] <user/owner_value><group_value><others_value> <file/dir>
+chmod [-R] <user/owner_value><group_value><others_value> <file/dir>			#[-R] stands for recursively traverse down
+OR
+chmod [-R] u=rwx,g=rwx,o=rwx <file/dir>
 
 #append grant execution permission to user/owner and group, also revoke read,write and execution from others
 chmod ug+x,o-rwx myfile.sh
@@ -17,7 +19,6 @@ chmod 770
 #set grant execution permission to user/owner and group, also revoke read,write and execution from others recursively
 chmod -R ug=rwx,o-rwx myfile.sh
 chmod -R 770
-
 
 
 --=====Change File/Folder Ownership(chown)

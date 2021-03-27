@@ -35,6 +35,7 @@ useradd -c "Siavash Golchoobian" siavash
 
 #Create a password for user
 passwd <username>
+passwd												Change current user password
 
 #Enabling root user on ubuntu
 sudo passwd root
