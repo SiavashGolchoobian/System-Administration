@@ -18,7 +18,7 @@ Index: An index tracks namespaces and docker repositories. For example, Docker H
 Docker Swarm: Is a native docker clustering.
 Docker Universal Control Plane: Managing & Monitoring tools of On-Prem and Cloud based Dockers.
 Docker Machine: Provisions Docker hosts/engines.
-Docker Compose: Compose multi-container apps.
+Docker Compose: Compose multi-container apps (app cluster).
 
 *Note1:
 By default, docker pull pulls images from Docker Hub. It is also possible to manually specify the path of a registry to pull from.
@@ -178,6 +178,15 @@ WORKDIR /
 
 #Step 10: Run PowerShell script Start.ps1, passing the -ACCEPT_EULA parameter with a value of Y
 CMD .\start.ps1 -ACCEPT_EULA "Y" -Verbose
+
+-----Docker-compose:
+docker-compose -f docker-compose.yaml up: Create docker containers and config them as defined on docker-compose.yaml file.
+docker-compose -d -f docker-compose.yaml up: Create docker containers and config them as defined on docker-compose.yaml file, also do all things in background and return console control to you.
+docker-compose down: stoping and removing app clustre
+docker-compose down --volumes: stoping and removing app clustre and removing it's volumes
+docker-compose stop: stoping app cluster with out deleting them
+docker-compose run <ContainerName> <Any Command>: Run <Any Command> on container named <ContainerName> inside app cluster
+docker compose ps
 
 Source:
 	https://www.mssqltips.com/sqlservertip/5698/create-sql-server-on-windows-docker-container-using-dockerfile--part-6/
