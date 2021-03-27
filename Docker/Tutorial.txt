@@ -44,6 +44,7 @@ docker run --name <myContainer> -d <myImageName>: to instruct and run a new cont
 docker run -h <myServerName> -d <myImageName>: to instruct and run a new container from specified image and with specified <myServerName> name as Server Host Name.
 docker run --name <myContainer> -h <myServerName> -it <myImageName>: create image with Container name of <myContainer> and Server name of <myServerName> from <myImageName>
 docker run -it <myImageName>: to run a new container in interactive mode, you can use Ctrl+P+Q to exit from container interactive console mode.
+docker run -d -p 5000:80 <myImageName>: This command will create a container based on <myImageName> image and forward any traffic from port 5000 on local host to port 80 on container machine.
 docker run -d -p 5000:5000 --restart=always --name myregistry registry:2: This command will create a local/internal Docker Registry container based on "registry" image on port 5000 (you can check you repo by browsing to your servernameOrIp:5000 or containernameOrIp:50000 on your web browser).
 docker run -it -v C:\GuestData01 <myImageName> --name <myContainer>: Create a volume inside the container named <myContainer> as folder mount point with the path of "C:\GuestData01" (you can see physical path of this folder inside your host by docker inspect command).
 docker run -it -v ${PWD}:/data <myImageName> --name <myContainer>: Create a volume inside the container named <myContainer> as folder mount point to linux server with the path of "/data" that linked to physical windows host on current directory (PWD).
@@ -53,6 +54,7 @@ docker volume inspect <volumeName>: show folder location and other volume config
 docker volume rm <volumeName>: Delete a volume.
 docker run -it --volumes-from=<myAnotherContainer/VolumeObjectName> <myImageName>: Allow access to a volume inside the another container named <myAnotherContainer> as folder mount point with the path of "C:\GuestData01". this access is vallid also if the <myAnotherContainer> is stopped or deleted.
 docker run -it -v D:\HostData01:C:\GuestData01 -v D:\HostData02:C:\GuestData02 <myImageName> --name <myContainer>: Create a volume inside the container named <myContainer> as folder mount point with the path of "C:\GuestData01" that point to host folder path on D:\HostData01.
+docker run -it --mount source=<volumeName>,destination=C:\GuestData01 <myImageName> --name <myContainer>: Mount a previously created Volume to container named <myContainer> as folder mount point with the path of "C:\GuestData01".
 docker run -it --mount type=bind,source=D:\HostData01,target=C:\GuestData01 --mount type=bind,source=D:\HostData02,target=C:\GuestData02 <myImageName> --name <myContainer>: Create a volume inside the container named <myContainer> as folder mount point with the path of "C:\GuestData01" that point to host folder path on D:\HostData01.
 docker rm -v <containerId>: Remove volume from container when the container is stopped.
 docker inspect <containerId>: to get runtime config of the specified container such as IP,volumes and many other informations about that container.
@@ -62,18 +64,23 @@ docker ps -l: show last started container.
 docker container start <containerId>: Start stoped container machine.
 docker attach <containerId>: Connect to running container console (Same as "docker container attach")
 docker container attach <containerId>: To connect to started docker machine(container) shell via client console and see it's status. you can exit from attached shell container with Ctrl + P + Q, also you can use Ctrl + C to break the container process and finishing container process (Exit).
-docker exec -it <containerId> cmd.exe: To connect to started docker machine(container) shell via client console and see it's status (it's better than attach command).
+docker exec -it <containerId> cmd.exe: To connect to started docker machine(container) shell via client console and see it's status (it's better than attach command, because it open newly tty console but attach connect to existed tty console).
+docker exec -it -u 0 <containerId> cmd.exe: To connect to started docker machine(container) shell via client console and user 0 (root) privilage and see it's status (it's better than attach command).
 docker pause <containerId>: pause a running container
 docker unpause <containerId>: unpause a paused container to running mode
 docker container restart <containerId>: Restart container machine.
 docker container stop <containerId>: Stop running container machine and release it's CPU and Memory resources, this mode is equal to Exit or container Shutdown.
 docker container start <containerId>: Start a stopped container machine.
+docker stats: continuously show resource utilization of containers like performance monitor.
+docker stats --no-stream: show a shot from resource utilization of containers like performance monitor.
 docker top <containerId>: return equivallent external PID of container internal running processes(internally from inside of the containers PIDs start from 1).
 docker logs <containerId>: show any logs inside of the container (this command shows output of openning thread on container/stdout)
+docker logs -f <containerId>: continuously show any logs inside of the container (you can exit from continuse mode with ctrl+c without breaking original process on container machine)
 docker inspect <containerId>: show low level detailed informations about specified container (located on c:\ProgramData\docker\containers\<ContainerId>\config.v2.json)
 docker kill -s: To kill a container process id 1.
 docker container rm <containerId>, <containerId>, ...: Remove stopped container(s).
 docker container rm -f <containerId>, <containerId>, ...: Force to Remove container(s) in any state mode (also if it's not stopped and in running state).
+docker container prune: Remove all non-running containers
 docker container ls: list currently existed containers.
 docker container ls -a: list all containers.
 docker rm <ContainerId>: Remove container(s)
@@ -84,7 +91,7 @@ docker commit -a "<authorName>" -m "<commitMessage>" <containerId> <NewImageName
 docker save -o x:\folderpath\myImage.tar <myImageName>: Export(Create) a tar file from our image (or commited container) for transportation purpose to another host(s).
 docker load -i x:\folderpath\myImage.tar: Import docker image from a tar file to current host.
 docker history <myImageName>: show commands used to create images.
-docker build -t helloworld:0.1 .: this command build a new image called helloworld tagged with 0.1 from Dockerfile inside the current folder(.) as below Dockerfile sectionn.
+docker build -t helloworld:0.1 .: this command build a new image called helloworld tagged with 0.1 from Dockerfile inside the current folder(.) as below Dockerfile section.
 docker tag <ImageId> <DockerHub:Port/myImageName:Tag>: Create a standard image for publishing to our <DockerHub> that listen on port <Port> with the name of <myImageName:Tag>
 docker push <DockerHub:Port/myImageName:Tag>: Upload an ready image (via "docker tag" command) to our <DockerHub> machine that listen on port <Port or 5000> with the name of <myImageName:Tag>
 docker push <DockerHub:Port/ExistedRepositoryOrUsername/myImageName:Tag>: Upload an ready image (via "docker tag" command) to our <DockerHub> machine that listen on port <Port or 5000> with the name of <myImageName:Tag>
@@ -115,6 +122,8 @@ ENTRYPOINT
 ENV var=value var=value var=value ...: This expose defined variable as a normal environment variable inside a container
 
 -----Dockerfile:
+To creating a Dockerfile at first step you should create an empty directory with any name you want (it's not matter), Then create an empty new file named "Dockerfile" without any extension, also pay attention to characters upper case and lower case, it should be exactly Dockerfile.
+Then open created file and type your commands on it like below examples.
 --Sample #1
 #Customized SQL Server Instance
 FROM mcr.microsoft.com/windows/servercore:ltsc2019
