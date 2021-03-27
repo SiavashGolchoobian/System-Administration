@@ -66,7 +66,7 @@ docker pause <containerId>: pause a running container
 docker unpause <containerId>: unpause a paused container to running mode
 docker container restart <containerId>: Restart container machine.
 docker container stop <containerId>: Stop running container machine and release it's CPU and Memory resources, this mode is equal to Exit or container Shutdown.
-docker start <containerId>: Start a stopped container machine.
+docker container start <containerId>: Start a stopped container machine.
 docker top <containerId>: return equivallent external PID of container internal running processes(internally from inside of the containers PIDs start from 1).
 docker logs <containerId>: show any logs inside of the container (this command shows output of openning thread on container/stdout)
 docker inspect <containerId>: show low level detailed informations about specified container (located on c:\ProgramData\docker\containers\<ContainerId>\config.v2.json)
@@ -77,14 +77,16 @@ docker container ls: list currently existed containers.
 docker container ls -a: list all containers.
 docker rm <ContainerId>: Remove container(s)
 decker rmi <ImageId>: Removes image(s) from the local registery (Docker Host).
-docker commit <containerId> <NewImageName>: Takes changes we made and creates a new image from our customized container.
-docker commit -a ... -m "..." 
+docker commit <containerId> <ExistedRepositoryOrUsername/NewImageName[:TAG]>: Takes changes we made and creates a new image from our customized container and save it in specified repository with specified optional TAG name (TAG name with correct ExistedRepositoryOrUsername for NewImageName is required for pushing image to global repo.).
+docker commit <containerId> <ExistedRepositoryOrUsername/NewImageName>: Takes changes we made and creates a new image from our customized container.
+docker commit -a "<authorName>" -m "<commitMessage>" <containerId> <NewImageName>: Takes changes we made and creates a new image from our customized container, also add author name (like "Siavash sia@sqldeep.com") and commit message (Like "Adding new feature").
 docker save -o x:\folderpath\myImage.tar <myImageName>: Export(Create) a tar file from our image (or commited container) for transportation purpose to another host(s).
 docker load -i x:\folderpath\myImage.tar: Import docker image from a tar file to current host.
 docker history <myImageName>: show commands used to create images.
 docker build -t helloworld:0.1 .: this command build a new image called helloworld tagged with 0.1 from Dockerfile inside the current folder(.) as below Dockerfile sectionn.
 docker tag <ImageId> <DockerHub:Port/myImageName:Tag>: Create a standard image for publishing to our <DockerHub> that listen on port <Port> with the name of <myImageName:Tag>
 docker push <DockerHub:Port/myImageName:Tag>: Upload an ready image (via "docker tag" command) to our <DockerHub> machine that listen on port <Port or 5000> with the name of <myImageName:Tag>
+docker push <DockerHub:Port/ExistedRepositoryOrUsername/myImageName:Tag>: Upload an ready image (via "docker tag" command) to our <DockerHub> machine that listen on port <Port or 5000> with the name of <myImageName:Tag>
 docker swarm init --listen-addr 192.168.127.33:2377 --secret ISAPCI: make this node as cluster initiator and manager for future cluster
 docker swarm join --secret ISAPCI \
 			--ca-hash sha256:xxxxxx \
