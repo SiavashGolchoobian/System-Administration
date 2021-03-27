@@ -1,0 +1,3 @@
+man <command>			#show help for a command
+info <command>			#show help for a command
+whatis <command>		#show short one-line description for a command

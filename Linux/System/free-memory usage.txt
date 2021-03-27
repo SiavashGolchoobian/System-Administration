@@ -1,0 +1,3 @@
+#show memory available free space
+free -h
+	-h print free-space in human readable

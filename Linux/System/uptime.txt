@@ -1,0 +1,2 @@
+#show system uptime and the system load averages for the past 1, 5, and 15 minutes, that is the average number of processes that are in a runnable or uninterruptable state. A process is in a runnable state when it is using the CPU or waiting to use the CPU; while a process is in an uninterruptable state when it is waiting for I/O access like waiting for a disk.
+uptime

@@ -1,0 +1,5 @@
+#Is a simple calculator (you should execute bc command with no argument, and then type your math syntax in bc shell)
+bc
+-------------
+6*4
+(3*55)*(2^10)

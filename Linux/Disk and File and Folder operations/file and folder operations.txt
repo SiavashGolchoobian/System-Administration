@@ -26,7 +26,7 @@ find . -name '*.txt' -size -100k
 #xargs pipe command: you can use it for doing some jobs on pre pipe stdout like deleting log files
 find . -name '*.log' | xargs rm
 
-#disk utilization report
+#disk utilization/usage report for a specified path
 du -sh [<path>]
 	-s	Summerizes
 	-h	print size in human readable format

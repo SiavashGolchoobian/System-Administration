@@ -19,6 +19,8 @@ cat etc/group
 	GroupName:Shadow Group Password Symbol:Group ID:Comma seperated list of Group members
 
 #Query user information
+id													Show current user identification infos
+OR
 id <username>
 OR
 grep <username> etc/passwd
@@ -55,6 +57,10 @@ userdel -r <username>								remove home directory and mail spool
 userdel -f <username>								force removal of files, even if not owned by user
 
 --=====GROUP
+#Show list of all system groups or user assigned groups
+groups
+groups <username>
+
 #Query group information
 grep <groupname> etc/group
 

@@ -1,0 +1,3 @@
+#locate a command executable file path
+which <command>
+which python

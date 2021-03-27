@@ -1,6 +1,6 @@
 #Show interactive list of processes
-top
-
+top -c
+	
 #List processes (head used to limiting the list to default 10)
 ps auxww | head
 	-a	show all processes (all users)
