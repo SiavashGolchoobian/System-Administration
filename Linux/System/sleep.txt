@@ -1,0 +1,3 @@
+#Sleep for number of specified seconds
+sleep <n>
+sleep 60
