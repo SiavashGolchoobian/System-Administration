@@ -5,3 +5,12 @@
 ||				#"OR" operator, <statement1> || <statement2>: if <statement1> was succeeded then <statement2> will be ignored, but if <statement1> is failed then <statement2> will be execued.
 !				#"Negation" operator
 {}				#"Command Grouping" operator,{ command1 ; command2 },take care that you should have one space around braces, Ex:{ echo -n 'Today is: ' ; date ; } | wc -c
+
+Note:
+	you can combine multiple && and || with braces around them "(command1 && command2) || (command3 && command4)"
+
+Examples:
+-------------
+mkdir myFolder && cd myFolder				#This command create folder named myFolder and then change the current directory to this folder
+mkdir myFolder || mkdir myAnotherFolder		#This command try to create foldder named myFolder but if it exists and can't create it (error raised), then it try to make another folder named myAnotherFolder
+(mkdir myFolder && ls -lh) || (mkdir myAnotherFolder && ls -lh)		#This command try to create foldder named myFolder but if it exists and can't create it (error raised), then it try to make another folder named myAnotherFolder

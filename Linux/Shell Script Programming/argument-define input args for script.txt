@@ -1,0 +1,7 @@
+#you can define input argument/parameters for your script files as below:
+#in script content $1 refers to first argument in input parameters of command line
+#also $2 refers to second argument in input parameters of command line
+#and $0 refers to whole text of command line
+#and # refers to count of entered parameters in command line
+
+$<n>

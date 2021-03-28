@@ -1,0 +1,3 @@
+#transfer a URL
+curl [-o <outputfilepath>] <URL>
+	-o <outputfilepath>			#Send curl output to <outputfilepath>

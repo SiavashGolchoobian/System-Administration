@@ -1,0 +1,7 @@
+#remove sections from each line of files and seperate it's values by specified delimiter
+cut -d <delimiter> -f <n>
+	-d <delimiter>			#Seperate input value by <delimiter>
+	-f <n>					#Return <n>'th splited value (field), splited item start with 1 not zero
+	
+---------Example:
+echo 'www.google.com' | cut -d . -f 2		#this will return "google"
