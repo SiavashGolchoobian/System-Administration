@@ -1,0 +1,8 @@
+#Hashbang define how to execute a script/executable file (interpreter script with which app)
+#Hashbang sign "#!" should be in first place of script file, also our script file should be executable (definable by chmod +x <our script file path>)
+#!<any executable interpreter>
+
+----Sample script file named "myscript.sh" (in this sample our script file should be executed\interpreted by "sh" application that placed in "/bin/sh" path, also we should mark myscript.sh as executable file by "chmod +x myscript.sh" command)
+#!/bin/sh
+echo 'hello world'
+echo 'bye'
