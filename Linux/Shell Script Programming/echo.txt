@@ -7,19 +7,20 @@ echo $?					#Return previous command result
 
 Examples:
 ------------------
-echo myfile*						#Print any files same as input expression (filenames start with myfile prefix) in current directory
-echo *.?							#Print any files same as input expression (any filenames having single character extension) in current directory
-echo myfile*.[ab]					#Print any files same as input expression (any filenames start with myfile prefix and having single character of a or b as extension) in current directory
-echo myfile*.[a-z]					#Print any files same as input expression (any filenames start with myfile prefix and having single character of a to z as extension) in current directory
-echo myfile*.[a-zA-G]				#Print any files same as input expression (any filenames start with myfile prefix and having single character of (a to z) or (A to G) as extension) in current directory
-echo myfile*.[^b]					#Print any files same as input expression (any filenames start with myfile prefix and it's extension is anything except b) in current directory
-echo This Pen Cost					#Print This Pen Cost
-echo This Pen Cost is /$4.0			#Print This Pen Cost is $4.0. you can use / as escape char to escape processing $4 as a variable name
-echo 'This Pen Cost is $4.0'		#Print This Pen Cost is $4.0. you can use double single qoute '' to escape processing of whole text to ind variables or regex (in this case the whole text is used in raw shape)
-echo 'This Pen Cost is $myPrice'	#Print This Pen Cost is $myPrice. Also if you have variable named $myPrice, it's value will not be replace in the text, and the text is printed without any processing.
-echo "This Pen Cost is $myPrice"	#If $myPrice variable is equaled to 4.0 then it Print: This Pen Cost is $4.0 .this sample shows the different behaviour of using ' and ".
-echo "\"$name" paied \$4.0"			#If $name variable is equaled to Ali then it Print: "Ali" paied $4.0. in this case we ant to having double qoute around name variable in stdout then we should use escape character to escape processing of " arount $name variable also to stop processing $4 as avariable we use another escape characer.
-echo "Today is $(date)"				#Print Today is 2021-01-01 11:10:01. in this sample we can use $ following by braces (<any command>), that in this case <any command> is date function to executing date function and return it's value and place it in the string like as a variable. in this type of scripting you should use " to allow shell processing the $, if you use ' it does not work as we want.
+echo myfile*								#Print any files same as input expression (filenames start with myfile prefix) in current directory
+echo *.?									#Print any files same as input expression (any filenames having single character extension) in current directory
+echo myfile*.[ab]							#Print any files same as input expression (any filenames start with myfile prefix and having single character of a or b as extension) in current directory
+echo myfile*.[a-z]							#Print any files same as input expression (any filenames start with myfile prefix and having single character of a to z as extension) in current directory
+echo myfile*.[a-zA-G]						#Print any files same as input expression (any filenames start with myfile prefix and having single character of (a to z) or (A to G) as extension) in current directory
+echo myfile*.[^b]							#Print any files same as input expression (any filenames start with myfile prefix and it's extension is anything except b) in current directory
+echo This Pen Cost							#Print This Pen Cost
+echo This Pen Cost is /$4.0					#Print This Pen Cost is $4.0. you can use / as escape char to escape processing $4 as a variable name
+echo 'This Pen Cost is $4.0'				#Print This Pen Cost is $4.0. you can use double single qoute '' to escape processing of whole text to ind variables or regex (in this case the whole text is used in raw shape)
+echo 'This Pen Cost is $myPrice'			#Print This Pen Cost is $myPrice. Also if you have variable named $myPrice, it's value will not be replace in the text, and the text is printed without any processing.
+echo "This Pen Cost is $myPrice"			#If $myPrice variable is equaled to 4.0 then it Print: This Pen Cost is $4.0 .this sample shows the different behaviour of using ' and ".
+echo "\"$name" paied \$4.0"					#If $name variable is equaled to Ali then it Print: "Ali" paied $4.0. in this case we ant to having double qoute around name variable in stdout then we should use escape character to escape processing of " arount $name variable also to stop processing $4 as avariable we use another escape characer.
+echo "Today is $(date)"						#Print Today is 2021-01-01 11:10:01. in this sample we can use $ following by braces (<any command>), that in this case <any command> is date function to executing date function and return it's value and place it in the string like as a variable. in this type of scripting you should use " to allow shell processing the $, if you use ' it does not work as we want.
+echo "Calc result of 10-2 is $(expr 10-2)"	#Print Calc result of 10-2 is 8.
 echo 'This is a 
 		multi line
 		text'

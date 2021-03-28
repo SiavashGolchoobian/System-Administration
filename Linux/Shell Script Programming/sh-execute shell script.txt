@@ -1,0 +1,13 @@
+#executing input file content as shell script executable content
+sh <filepath.sh>
+
+-----Example:
+cat > sleep.sh <<\End
+start=$(date +%s)
+echo $start
+sleep 10
+end=$(date +%s)
+echo "The process lasted $(expr $end - $start) seconds"
+End
+
+sh sleep.sh			#in this sample we create a file named sleep.sh by cat command and put our script inside it and finally run it by sh command

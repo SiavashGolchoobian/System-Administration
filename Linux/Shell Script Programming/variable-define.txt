@@ -1,6 +1,9 @@
 #Define variable and assign value
-myValue=1				#You should not have any space around "="
-echo $myValue
+<any variable name>=<any value>				#Assigne <any value> value to <any parameter> parameter. You should not have any space around "="
 
+------------Examples:
 myString=Ali
-echo $myString
+echo $myString								#Return Ali
+
+myValue=$(expr 10-2)
+echo $myValue								#Return 8

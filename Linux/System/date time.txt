@@ -1,5 +1,8 @@
 --Get date time
 timedatectl 
+OR
+date [+%s]
+	+%s 		#shows date time as seconds left from base date to now, if this option is ommited, date command show current date time of system in human readable format
 
 --Get list of timezones
 timedatectl list-timezones

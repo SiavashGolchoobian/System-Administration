@@ -1,4 +1,42 @@
 #Concat file contents and show concatenated contents, also can be used like print
-cat [-n] <filepath1> <filepath2> ... <filepathN>
+cat [-n] <filepath1> <filepath2> ... <filepathN> [> <any output filename>] [<<\<any sign like EOF><any text><any sign like EOF>] [< <any input filename>]
 cat <filepath>
-	-n			#Show line number before each stdout lines
+	-n														#Show line number before each stdout lines
+	> <any output filename>									#Send cat ouput to <any output filename> file
+	<<\<any sign like EOF><any text><any sign like EOF>		#Get input from console instead of file, input should end with <any sign like EOF> phrase.
+	< <any input filename>									#Get input of cat from <any input filename>, it's same as assign <filepath1> argument
+
+-----Examples:
+cat mydoc.txt > mydoc-copy.txt		#Copy mydoc.txt content to another file, named mydoc-copy.txt, if mydoc-copy.txt has any content it will be replaced by new content
+cat mydoc.txt >> mydoc-copy.txt		#Append mydoc.txt content to another file, named mydoc-copy.txt
+cat > mydoc-copy.txt < mydoc.txt	#Copy mydoc.txt content to another file, named mydoc-copy.txt, same as first example
+
+cat > mydoc.txt <<\EOF
+ This is my first line of doc
+ This is my scond line of doc
+ and i want to send a text to
+ cat command and i expect that
+ cat command save it to mydoc.txt
+ as output target, also my text
+ is multi-line and shell process
+ it as text until see EOF word
+ sign as mentioned in start of 
+ command EOF should be typed in
+ new line and should not have 
+ any space around itself.
+EOF
+
+cat > mydoc.txt <<\EOTEXT
+ This is my first line of doc
+ This is my scond line of doc
+ and i want to send a text to
+ cat command and i expect that
+ cat command save it to mydoc.txt
+ as output target, also my text
+ is multi-line and shell process
+ it as text until see EOTEXT word
+ sign as mentioned in start of 
+ command EOTEXT should be typed in
+ new line and should not have 
+ any space around itself.
+EOTEXT
