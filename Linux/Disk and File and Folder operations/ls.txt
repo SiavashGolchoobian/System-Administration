@@ -1,0 +1,5 @@
+ls
+	-l			#long list
+	-h			#human readable
+	-r 			#sort output in reverse order (DESC)
+	
