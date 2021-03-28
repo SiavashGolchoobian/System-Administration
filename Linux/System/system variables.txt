@@ -1,0 +1,2 @@
+$PATH				#Contain path of folders that should be executing without explicit file address
+$HOME				#Current user home folders

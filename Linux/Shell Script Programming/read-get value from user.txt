@@ -1,0 +1,6 @@
+#Get value(s) from user (console input line) and put them in specified variable name(s)
+read <variable1> <variable2> <variableN>
+
+Example:
+------------
+read myVal1 myVal2 myVal3				#we get 3 input from user and user should type 3 value that typed countiniusely in one line and seperdated by space like:10 20 30

@@ -1,0 +1,6 @@
+#Define variable and assign value
+myValue=1				#You should not have any space around "="
+echo $myValue
+
+myString=Ali
+echo $myString

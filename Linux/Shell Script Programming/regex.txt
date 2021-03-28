@@ -1,0 +1,23 @@
+*				#Any character(s) allowed
+?				#Only one character allowed
+^<char>			#Any charater taht is not equal to <char> allowd
+[a,b]			#Only one character that specified in list is allowed
+[a-z]			#Only one character that specified in range list is allowed
+\				#Escape character
+'<any text>'	#Does not process whole <any text> and print it as raw text
+"<any text>"	#Check <any text> to find any variable ($anyname) and replace any variable(s) with it's value but does not process <any text> for regex and print whole <any text> that all founded inside variables are replace with their values.
+
+Examples:
+------------------
+echo myfile*						#Print any files same as input expression (filenames start with myfile prefix) in current directory
+echo *.?							#Print any files same as input expression (any filenames having single character extension) in current directory
+echo myfile*.[ab]					#Print any files same as input expression (any filenames start with myfile prefix and having single character of a or b as extension) in current directory
+echo myfile*.[a-z]					#Print any files same as input expression (any filenames start with myfile prefix and having single character of a to z as extension) in current directory
+echo myfile*.[a-zA-G]				#Print any files same as input expression (any filenames start with myfile prefix and having single character of (a to z) or (A to G) as extension) in current directory
+echo myfile*.[^b]					#Print any files same as input expression (any filenames start with myfile prefix and it's extension is anything except b) in current directory
+echo This Pen Cost					#Print This Pen Cost
+echo This Pen Cost is /$4.0			#Print This Pen Cost is $4.0. you can use / as escape char to escape processing $4 as a variable name
+echo 'This Pen Cost is $4.0'		#Print This Pen Cost is $4.0. you can use double single qoute '' to escape processing of whole text to ind variables or regex (in this case the whole text is used in raw shape)
+echo 'This Pen Cost is $myPrice'	#Print This Pen Cost is $myPrice. Also if you have variable named $myPrice, it's value will not be replace in the text, and the text is printed without any processing.
+echo "This Pen Cost is $myPrice"	#If $myPrice variable is equaled to 4.0 then it Print: This Pen Cost is $4.0 .this sample shows the different behaviour of using ' and ".
+echo "\"$name" paied \$4.0"			$If $name variable is equaled to Ali then it Print: "Ali" paied $4.0. in this case we ant to having double qoute around name variable in stdout then we should use escape character to escape processing of " arount $name variable also to stop processing $4 as avariable we use another escape characer.

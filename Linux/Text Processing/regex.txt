@@ -1,7 +1,0 @@
-Examples:
-------------------
-echo myfile*			#Print any files same as input expression (filenames start with myfile prefix) in current directory
-echo *.?				#Print any files same as input expression (any filenames having single character extension) in current directory
-echo myfile*.[ab]		#Print any files same as input expression (any filenames start with myfile prefix and having single character of a or b as extension) in current directory
-echo myfile*.[a-z]		#Print any files same as input expression (any filenames start with myfile prefix and having single character of a to z as extension) in current directory
-echo myfile*.[a-zA-G]	#Print any files same as input expression (any filenames start with myfile prefix and having single character of (a to z) or (A to G) as extension) in current directory
