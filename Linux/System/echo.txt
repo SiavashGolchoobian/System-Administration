@@ -1,1 +1,4 @@
+#Print to stdou
+echo [-n] <message1>
+	-n		#Does not add NL/CR to end of line
 echo $?		#return previous command result

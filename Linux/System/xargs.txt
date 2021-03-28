@@ -1,0 +1,9 @@
+#build and execute command lines from standard input, in cases where commands can not support pipe input correctly, you can use xargs to assign pipe output to command argument input.
+xargs [options] [command [initial-arguments]]
+	Options:
+		-n <max-args>		#Send pipe output to current command in batches of <max-args> count
+		-t 					#Print the command to stdout before executing it
+		
+echo 'one two three' | mkdir				#this will generate an error because mkdir can not support pipe input
+echo 'one two three' | xargs mkdir			#this will create three folders, in this case pipe ouput goes to xargs, and xargs put it's streamed values infront of mkdir command (in xargs we have a paradox because we write "xargs" command before mkdir, but it's values goes infront of mkdir)
+echo 'one two three' | xargs -n 1 mkdir		#this will create three folders, in this case pipe ouput goes to xargs one by one, and xargs put each name infront of mkdir command and execute it one by one
