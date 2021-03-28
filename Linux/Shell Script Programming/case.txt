@@ -1,0 +1,9 @@
+#Case switch
+case <Input Value> in
+<value1>)
+	<any commands>
+	;;
+<value2>)
+	<any commands>
+	;;
+esac

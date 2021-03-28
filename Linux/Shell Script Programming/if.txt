@@ -1,0 +1,31 @@
+#Conditional control, make attention that you should have space around brackets
+if [ <condition> ]; then
+	<any commands>
+else
+	<any commands>
+fi
+
+OR
+
+if test <condition>; then
+	<any commands>
+else
+	<any commands>
+fi
+
+-----Example1:
+if [ 1 -lt 2 ]; then
+echo "1 is less than 2"
+fi
+
+-----Example2:
+if test 1 -lt 2; then
+echo "1 is less than 2"
+fi
+
+-----Example3:
+if [ 1 -lt 2 ]; then
+echo "1 is less than 2"
+else
+echo "2 is less than 1"
+fi

@@ -1,12 +1,12 @@
 #Create a for loop
 
-for <myLoop> in <myRange>
+for <myLoop> in <myRange>;
 do
 	<any commands>
 done
 
 ------Example1:
-for myLoop in $(seq 1 10)
+for myLoop in $(seq 1 10);
 do
 echo "Row number $myLoop"
 done
@@ -15,19 +15,19 @@ done
 for myLoop in $(seq 1 10);do echo "Row number $myLoop";done
 
 ------Example3: in this sample our range has 5 values (hello,world,1,2,3), attention that you should not use ";" symbol Immediately after "do" command
-for myLoop in hello world 1 2 3
+for myLoop in hello world 1 2 3;
 do
 echo "Row is: $myLoop"
 done
 
 ------Example4: in this sample our range has 5 values plus any number of filename in current directory because we use * inside the range (hello,world,*,1,2,3)
-for myLoop in hello world * 1 2 3
+for myLoop in hello world * 1 2 3;
 do
 echo "Row is: $myLoop"
 done
 
 ------Example5: loop throughout each line of myfile.txt
-for myLoop in $(cat myfile.txt)
+for myLoop in $(cat myfile.txt);
 do
 echo "Row is: $myLoop"
 done

@@ -1,0 +1,26 @@
+#Create a while loop, make attention that you should have space around brackets
+
+while <anything exists>;
+do
+	<any commands>
+done
+
+OR
+
+while [ <true condition> ];
+do
+	<any commands>
+done
+
+OR
+
+while test <true condition>;
+do
+	<any commands>
+done
+
+---Example1: in this sample we pipe /etc/passwd content to while loop and seperate it's user name from each line and print it.
+cat /etc/passwd |
+while read myline; do
+echo $(echo $myline | cut -d : -f 1 )
+done
