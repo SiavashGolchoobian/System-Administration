@@ -1,2 +1,3 @@
 #by default read first 10 line of file
-head <filepath>
+head [-<n>] <filepath>
+	-n			#Return only first n number of lines from head of file

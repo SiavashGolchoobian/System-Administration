@@ -1,2 +1,3 @@
 #by default read last 10 line of file
-tail <filepath>
+tail [-<n>] <filepath>
+	-n			#Return only last n number of lines from end of file

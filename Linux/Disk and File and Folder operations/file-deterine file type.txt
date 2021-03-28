@@ -1,0 +1,2 @@
+#determine file type
+file <filepath>

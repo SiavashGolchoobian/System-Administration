@@ -1,0 +1,2 @@
+#copy file
+cp <sourceFilePath> <destFilePath>

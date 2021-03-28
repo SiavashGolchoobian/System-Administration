@@ -1,0 +1,2 @@
+#display file access and size status.
+stat <filepath>

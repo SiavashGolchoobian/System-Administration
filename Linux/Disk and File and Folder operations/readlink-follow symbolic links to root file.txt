@@ -1,0 +1,2 @@
+#print resolved symbolic links or canonical file names and follow all soft links to actual file and return path of that actual file
+readlink <filepath>

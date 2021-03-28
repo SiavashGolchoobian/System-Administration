@@ -1,0 +1,2 @@
+#Below command return last command exit code status, any value except 0 means an error (0 value means succeed status).
+$?

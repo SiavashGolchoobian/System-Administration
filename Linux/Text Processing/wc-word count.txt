@@ -1,5 +1,5 @@
 #wc return number of lines, number of words and number of characters in a specified file
-wc <textFilePath>
-
+wc [-l] <textFilePath>
+	-l						#Count only number of lines in the input file
 --Source:
 https://linuxize.com/post/linux-wc-command/

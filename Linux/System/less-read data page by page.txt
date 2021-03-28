@@ -1,0 +1,2 @@
+#Read data partially with paging capability, also "more" command is same as less command but less is more powerful
+less <filepath>

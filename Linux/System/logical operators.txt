@@ -1,0 +1,6 @@
+>				#"Output To" operator
+<				#"Input From" operator
+|				#"Pipe" operator, <statement1> | <statement2>: execute <statement1> and send it's output to <statement2> as Input Source
+&&				#"AND" operator, <statement1> && <statement2>: if <statement1> was succeeded then <statement2> will be execute, but if <statement1> is failed it does not execute following statments (<statement2>)
+||				#"OR" operator, <statement1> || <statement2>: if <statement1> was succeeded then <statement2> will be ignored, but if <statement1> is failed then <statement2> will be execued.
+!				#"Negation" operator

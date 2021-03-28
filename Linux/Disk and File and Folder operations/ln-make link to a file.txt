@@ -1,0 +1,5 @@
+#Make link to a file, if using "-s" it will create soft link for you and if ommiting "-s" it will create hard link by default.
+#Soft link is like shortcut is windows, but hard link make same copy of original file and it has full synchronized file content as original file, alo if original file was deleted.
+#Also in hard link, this type of linked file is synchronized with original file and automaticaly it's content equaled to original one in future.
+ln [-s] <originalFilePath> <newSymbolicFilePath>
+	-s 				#Soft symbolic link

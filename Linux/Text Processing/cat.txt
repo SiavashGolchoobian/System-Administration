@@ -1,3 +1,4 @@
 #Concat file contents and show concatenated contents, also can be used like print
-cat <filepath1> <filepath2> ... <filepathN>
+cat [-n] <filepath1> <filepath2> ... <filepathN>
 cat <filepath>
+	-n			#Show line number before each stdout lines
