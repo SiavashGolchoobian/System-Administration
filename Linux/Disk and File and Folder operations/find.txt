@@ -1,0 +1,2 @@
+#Fin files with size of less than 100k and txt extension
+find . -name '*.txt' -size -100k

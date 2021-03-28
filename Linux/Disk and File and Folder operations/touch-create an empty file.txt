@@ -1,2 +1,2 @@
-#Change file timestamp(access time) or create a new empty file if specified file does not exists
-touch <filename>
+#Change file(s) timestamp(access time) or create new empty file(s) if specified file(s) does not exists
+touch <filename1> <filename2> <filenameN>

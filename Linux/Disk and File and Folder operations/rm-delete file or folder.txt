@@ -1,0 +1,2 @@
+#delete a directory and all subsequent directories without any question
+rm -rf <path>

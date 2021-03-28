@@ -1,2 +1,3 @@
-#copy file
-cp <sourceFilePath> <destFilePath>
+#Copy file (use -R to recursively copy sub directories)
+cp <source file path> <dest file path>
+cp -R <source file path> <dest file path>

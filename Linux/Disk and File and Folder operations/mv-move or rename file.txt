@@ -1,0 +1,5 @@
+#Move or rename a file
+mv <source file path> <dest file path>
+mv names.txt fullnames.txt							--rename file
+mv names.txt /home/himanshu/Downloads				--move file
+mv names.txt /home/himanshu/Downloads/fullnames.txt	--move and rename file
