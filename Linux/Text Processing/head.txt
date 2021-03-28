@@ -1,0 +1,2 @@
+#by default read first 10 line of file
+head <filepath>

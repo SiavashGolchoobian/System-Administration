@@ -1,0 +1,2 @@
+#by default read last 10 line of file
+tail <filepath>

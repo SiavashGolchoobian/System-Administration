@@ -1,0 +1,10 @@
+#In Linux command output has two type:
+	type 1 : that is default for all commands and return results to stdout (standard output)
+	type 2 : that return errors
+	
+#Sample1:
+	--below command send ls result to lsresult.txt and send any occured errors to lseerors.txt
+	ls -lh 1>lsresult.txt 2>lserrors.txt
+#Sample2:
+	--below command send ls result to lsresult.txt and send any occured errors to nul device (black whole)
+	ls -lh 1>lsresult.txt 2>/dev/null
