@@ -1,7 +1,8 @@
 #Tape Archiving
 #Decompress
-	tar [-t] [-z] [-v] [-f] 
+	tar [[-x] [-t]] [-z] [-v] [-f] 
+		-x	#extract file
 		-t	#get tar file list
 		-z	#it is a zip file
-		-v	#show in verbose mode
+		-v	#show in extraction progress in verbose mode
 		-f 	#it's a file, not tape
