@@ -1,0 +1,4 @@
+#Compress and decompress by zip alghoritn, typical exension is .tar.zip
+sudo apt install unzip
+unzip [-v] <zippedfile>
+	-v		#show file content
