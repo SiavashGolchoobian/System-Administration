@@ -6,3 +6,6 @@
 		-z	#it is a zip file
 		-v	#show in extraction progress in verbose mode
 		-f 	#it's a file, not tape
+#Compress
+	tar [-c] [-z] [-f]
+		-c	#compress
