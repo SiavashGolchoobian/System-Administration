@@ -1,0 +1,7 @@
+#Tape Archiving
+#Decompress
+	tar [-t] [-z] [-v] [-f] 
+		-t	#get tar file list
+		-z	#it is a zip file
+		-v	#show in verbose mode
+		-f 	#it's a file, not tape
