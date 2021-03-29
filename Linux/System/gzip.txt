@@ -1,0 +1,2 @@
+#Compress file with gzip algorithm
+gzip -c

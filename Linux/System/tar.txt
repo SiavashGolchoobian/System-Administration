@@ -1,11 +1,12 @@
-#Tape Archiving
+#Tape Archiving and Compression
 #Decompress
 	tar [[-x] [-t]] [-z] [-v] [-f] 
 		-x	#extract file
 		-t	#get tar file list
-		-z	#it is a zip file
+		-z	#it is a gzip file
 		-v	#show in extraction progress in verbose mode
 		-f 	#it's a file, not tape
 #Compress
-	tar [-c] [-z] [-f]
-		-c	#compress
+	tar [-c] [-z] [-f] <outputfile> <inputPath>
+		-c	#create archived file, normally use .tar extension for archive only
+		-z 	#use gzip algorithm for compression, normally use .tar.gz extension for this type of compressing
