@@ -1,3 +1,5 @@
 #transfer a URL
 curl [-o <outputfilepath>] <URL>
 	-o <outputfilepath>			#Send curl output to <outputfilepath>
+	-L							#if link is moved to different location, curl follow new link
+	-s							#Silent execution
