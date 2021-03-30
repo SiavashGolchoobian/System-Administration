@@ -1,0 +1,31 @@
+#find
+find [-type f|d] [-maxdepth <n>] [-not] [-o|a] [-name '<regex>'] [-size [+|-]<n>[M|Gi]] [-perm <xyz>] [-user <username>] [-mtime <[-|+] n>] [-mmin <[-|+] n>] [-amin <[-|+] n>] [-ls] [-delete] [-empty] [-exec <anyCommand> '{}' \;]
+	-type f							#find only file type objects
+	-type d							#find only directory type objects
+	-maxdepth <n>					#try to find also inside directories until depth level of <n>, n=1 means current level and values over than 1 means current and all other deeper levels till <n> level
+	-name <regex>					#find objects matched with <regex>
+	-not							#Return files not equal to find conditions (reverse file list)
+	-o|a							#combine find multiple conditions with OR(o) logical operator or AND(a) logical operator
+	-size [+|-]<n>[M|Gi]			#find files +(over) or -(under) or equal to <n> megabyte(M) ir Gigabyte (Gi)
+	-perm <xyz>						#find files with permission of xyz (Ex: 775)
+	-user <username>				#find files owned by user <username>
+	-mtime [-|+] <n>				#find files that it's modification time is less than(-), over than(+) or equal to last <n> days
+	-mmin [-|+] <n>					#find files that it's modification time is less than(-), over than(+) or equal to last <n> minutes
+	-amin [-|+] <n>					#find files that it's access time is less than(-), over than(+) or equal to last <n> minutes
+	-ls								#show long list of founded objects
+	-delete							#delete founded objects
+	-empty							#return empty directories
+	-exec <anyCommand> '{}' \;		#execute <anyCommand> with related parameters for each founded file one by one. symbol "\;" used to show end of exec command section.
+	
+Example01: Find object with single char extension
+	find -name "*.?"
+Example02: Find all .gz files and decompress then
+	find type f -name "*.gz" -exec gzip -dc '{}' \;
+Example03: Find object with modification time over than last 60 minutes
+	find -mmin +60
+Example04: Find directories with permission 775 and change it's permission to 0744
+	find -type d -perm 775 -exec chmod 0744 '{}' \;
+Example05: Find files that their extension is not .log or has 3 character extension
+	find -not -name '*.log' -type f -o -name '*.???' -type f
+Example06: Find files that their extension is not .log and has 3 character extension
+	find -not -name '*.log' -type f -a -name '*.???' -type f

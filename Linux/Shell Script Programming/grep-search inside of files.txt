@@ -1,0 +1,51 @@
+#grep, egrep and fgrep commands are search for all occurance of <regex> word inside of <filename> file(s), egrep is extended version of grep command and fgrep is fixed string find\grep that is a simple version of grep.
+grep [-r] [-l] <regex> <filename(s)>
+	-r 						#Recursively traverse all dirctory files to deepest levels to find <regex> occurance in their file contents
+	-l						#Print only names of files with selected\founded matched lines
+	<regex>:
+		'<name>'			#Lines contain(like *name*) <name>
+		'^<name>'			#Lines start with <name>
+		'\b<name>'			#Word(s) start with <name>, also it label multiple words in one line
+		'.'					#Indicator of only one character
+		'?'					#Indicator of 0 or 1 occurance of character
+		'*'					#Indicator of any number of characters
+		'[[:space:]]		#Indicator of any number of space characters
+		'[[:blank:]]		#Indicator of any number of blank characters
+		'[[:digit:]]		#Indicator of any number of digit trailing characters
+		'[[:xdigit:]]		#Indicator of any number of xdigit characters
+		'[[:print:]]		#Indicator of any number of printable character
+		'<name>$'			#Lines End with <name>
+		'[A-Z]'
+		'[a-zA-Z]'
+		
+egrep [-v] [-r] [-l] <regex> <filename>
+	-v 						#Complementary search (return any things not matched with criteria)
+	<regex>:
+		'<char>{n}'			#Lines with exactly <n> occurance of <char>
+		'<char>{,n}'		#Lines with maximum number of <n> occurance of <char>
+		'<char>{n,}'		#Lines with minimum number of <n> occurance of <char>
+		'<char>{m,n}'		#Lines with minimum <m> and maximum <n> number of <char> occurance
+		'\<char>'			#Indicator of processing special character as normal character
+		'<char>+'			#Indicator of more than 1 occurance of trailing <char>
+		'(<char>)'			#Grouping character
+		'(<name1>|<name2>)'	#occurance of <name1> or <name2>, pipe means OR
+
+fgrep [-v] [-r] [-l] <fixstring> <filename>
+	
+--Example00: Search for myfunction words inside of all of text files
+	grep myfunction *.txt
+--Example01: Search for all "ali" words inside of "/myfiles/dict.txt" file
+	grep ali /myfiles/dict.txt
+--Example02: Search for all lines start with "ali" words inside of "/myfiles/dict.txt" file
+	grep '^ali' /myfiles/dict.txt
+--Example03: Search for all lines having a  then a char then i then a char then r then a char and finally a char followingby other words inside of "/myfiles/dict.txt" file (like alirezayi)
+	grep 'a.i.r.a' /myfiles/dict.txt
+--Example04: Search for all lines start with a then a char then i then a char then r then a char and finally a char inside of "/myfiles/dict.txt" file (like alireza but not alirezayi)
+	grep '^a.i.r.a$' /myfiles/dict.txt
+--Example05: Search for all lines start with as many spaces and end with sia word)
+	grep '^[ ]*sia$' /myfiles/dict.txt
+--Example06:find all words starting with anycharacter and then following as many as any characters and finally end with same character as first word character (first grouped character should be repeated at end of the word, in this case (.) is indication of a grouped charatcer that has only one char and /1 is indidication of repeating first group as end of word($))
+	egrep '^(.).*\1$'
+		alga
+		alpha
+		wow
