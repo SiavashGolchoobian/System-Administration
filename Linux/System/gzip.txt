@@ -1,2 +1,4 @@
 #Compress file with gzip algorithm
-gzip -c
+gzip [-c] [-dc]
+	-c		#compress
+	-dc		#decompress

@@ -1,2 +1,3 @@
 #Compress and decompress files by bzip2, typical exension is .tar.bz2
-bzip2 <filepath>
+bzip2 [-c] <filepath>
+	-c		#compress
