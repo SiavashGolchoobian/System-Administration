@@ -1,5 +1,6 @@
-#grep, egrep and fgrep commands are search for all occurance of <regex> word inside of <filename> file(s), egrep is extended version of grep command and fgrep is fixed string find\grep that is a simple version of grep.
-grep [-r] [-l] <regex> <filename(s)>
+#grep, egrep and fgrep commands are search for all occurance line of <regex> word inside of <filename> file(s), egrep is extended version of grep command and fgrep is fixed string find\grep that is a simple version of grep.
+grep [-v] [-r] [-l] <regex> <filename(s)>
+	-v 						#Complementary search (return any things not matched with criteria / reverse result set)
 	-r 						#Recursively traverse all dirctory files to deepest levels to find <regex> occurance in their file contents
 	-l						#Print only names of files with selected\founded matched lines
 	<regex>:
@@ -19,7 +20,6 @@ grep [-r] [-l] <regex> <filename(s)>
 		'[a-zA-Z]'
 		
 egrep [-v] [-r] [-l] <regex> <filename>
-	-v 						#Complementary search (return any things not matched with criteria)
 	<regex>:
 		'<char>{n}'			#Lines with exactly <n> occurance of <char>
 		'<char>{,n}'		#Lines with maximum number of <n> occurance of <char>

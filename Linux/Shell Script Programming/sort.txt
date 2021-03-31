@@ -1,0 +1,15 @@
+#Sort records(lines) inside <filepath> by it's first field delimited by space, by default.
+sort [-t <delimiter>] [-k <n[.x]>[,<m[.y]>]][r][M|n] <filepath>
+	-t<delimiter>		#detect fields by <delimiter> character seperator, if this switch is ommited, by defaul space character is used as delimiter
+	-k<n>				#sort lines ascending by key/field number <n>
+	-k<n.x>				#sort lines ascending by key/field number <n> and <x>th character of that field
+	-k<n.x>,<m.y>		#sort lines ascending by key/field number <n> and <x>th character of that field then by field number<m> and <y>th character of that field
+	r					#reverse sort order (Descending)
+	M|n					#Process sorted field as M=Month or n=numeric, if ommited sort data as string
+	
+Example01: Sort myfile1 records(lines) by it's first field delimited by space(by default)
+	sort myfile1.txt
+Example02: Sort myfile1 records(lines) by second field (as ascending string sort) and then by 3rd field (as descending numeric sort)
+	sort -k2 -k3nr myfile1.txt
+Example03:Sort passwd lines by userid/4th field (delimited by :) as numeric descending field
+	sort -t : -k 4n /etc/passwd
