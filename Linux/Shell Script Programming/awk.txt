@@ -1,0 +1,15 @@
+#pattern scanning and processing language
+awk [-F<fieldDelimiterChar] <pattern> <filepath>
+	<pattern>:
+		$<n>		#get n'th field
+
+Example01: search for lines containing 'bash' keyword
+	awk '/bash/' /etc/passwd
+Example02: search for lines/records that is a delimited list and fields seperated by ':', in this file search on third field for values greate than 1000
+	awk -F: '$3 > 1000' /etc/passwd
+Example03: irst field of lines/records that is a delimited list and fields seperated by ':'
+	awk -F: '{print $1}' /etc/passwd
+Example04: search for lines/records that is a delimited list and fields seperated by ':', in this file search on third field for values greate than 1000, and then print it's first column values of those records.
+	awk -F: '$3 > 1000 {print $1}' /etc/passwd
+Example04: print all services not start with #
+	awk '!/^#/ {print $1}' /etc/services
