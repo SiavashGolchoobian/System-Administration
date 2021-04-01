@@ -32,6 +32,8 @@ du -sh [<path>]
 	-h	print size in human readable format
 	-k	print size in KB rather than block size
 	-c	produce a grand total at the end of the run
+Example: Sort list by size from largest to smallest
+	du -h /usr/share/man | sort -rh
 	
 #disk free space:
 df -h [<path>]
