@@ -1,0 +1,6 @@
+#tr used to translate
+
+Example01: replace space with - (output is "hi-siavash-golchoobian")
+echo "hi siavash golchoobian | tr ' ' -
+Example02: replace lower case chars with upper cases (output is "HI SIAVASH GOLCHOOBIAN")
+echo "hi siavash golchoobian | tr a-z A-Z

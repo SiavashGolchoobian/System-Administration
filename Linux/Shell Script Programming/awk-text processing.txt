@@ -1,15 +1,26 @@
 #pattern scanning and processing language
-awk [-F<fieldDelimiterChar] <pattern> <filepath>
+awk [-f <awkFilename>] [-F"<fieldDelimiterChar>"] <pattern> <filepath>
+	-f<awkFilename>	#use <awkFilename> file as awk commands saved on a persisted file, sample: awk -f myawkcommand.awk myData.txt
+	-F				#Define field seperator character, if ommited, awk by default seperate fields by space char
+					also <fieldDelimiterChar>='/t' means tab character
 	<pattern>:
-		$<n>		#get n'th field
-
+		$<n>		#get n'th field. n=0 means whole of line
+		NR			#Number of Record
+		if			#Condition
+		
 Example01: search for lines containing 'bash' keyword
 	awk '/bash/' /etc/passwd
 Example02: search for lines/records that is a delimited list and fields seperated by ':', in this file search on third field for values greate than 1000
 	awk -F: '$3 > 1000' /etc/passwd
-Example03: irst field of lines/records that is a delimited list and fields seperated by ':'
+Example03: print first field of lines/records (that is a delimited list) and it's fields seperated by ':'
 	awk -F: '{print $1}' /etc/passwd
 Example04: search for lines/records that is a delimited list and fields seperated by ':', in this file search on third field for values greate than 1000, and then print it's first column values of those records.
 	awk -F: '$3 > 1000 {print $1}' /etc/passwd
 Example04: print all services not start with #
 	awk '!/^#/ {print $1}' /etc/services
+Example05: print first field of myfile.txt records and print this field values as char(10)
+	awk '{printf "%10s\n", $1}' myfile.txt
+Example06: if number of records is greater than 1 (skip first record) then print a formatted sentence
+	awk -F "," 'NR>1 {print "Name:" $2 ", Email:" $3 ", Phone:" $4}' myfile.txt
+Example06: if third field is null print that record/line number in stdout
+	awk -F "," '{ if ($3 == "") print "field 3 is missing on line " NR}' myfile.txt
