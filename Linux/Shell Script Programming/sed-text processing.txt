@@ -1,15 +1,28 @@
 #Stream editor, edit stream of text in realtime, in sed stream unit of measure is line, then each line is a bucket in stream
-sed [-n] [-i[.bak]] [<command>] <filename>
+sed [-n] [-i[.bak]] [<n>q] [<command>] <filename>
 	-n							#run in silent mode (do not print content when read it, by default is disabled)
 	-i							#do correction inplace (rewrite modifications on original input file), by default sed does not apply any modification on original file.
 	-i.bak						#same as -i but before replace original file take backup from original one and then modify old file.
+	<n>q						#exist from stream processing on line number <n>, for example quit from sed after processing line number 10: sed 10q file.txt 
 	<command>:
 		p 						#print stream to stdout
 		d 						#delete stream from stdout, for example delete second line from file.txt: sed -n '2d' file.txt
 		<n>						#process line <n>, for example to pint first line: sed -n '1p' file.txt
+		<!n>					#does not process line <n>, for example not to pint first line: sed -n '1!p' file.txt
 		<n>,<m>					#process line <n> to <m>, for example to pint line 1 to 5: sed -n '1,5p' file.txt
 		<n>,<+m>				#process line <n> to <n+m>, for example to pint line 1 till next 4 lines (or to line 5): sed -n '1,+4p' file.txt
-		s/<oldtext>/<newtext>/[<n>|g]	
-								#replace <n>'th occurranc of <oldtext> with <newtext> in input stream
+		s<seperatorChar><oldtext><seperatorChar><newtext><seperatorChar>[<n>|g|i]	
+								#replace <n>'th occurranc of <oldtext> with <newtext> in input stream (each line)
 								#g means all occurance (globally)
-		
+								#i ignore case
+		\s						#means any type of space like space, tab and so on
+		\b						#means start of word
+
+Example01:
+	echo 'sunday is a pleasent day' | sed -n 's/day/night/'
+	echo 'sunday is a pleasent day' | sed -n 's/day/night/2'
+	echo 'sunday is a pleasent day' | sed -n 's/day/night/g'
+	echo 'sunday is a pleasent day' | sed -n 's_day_night_'
+	echo 'sunday is a pleasent day' | sed -n 's/\bw/W/g'		#Means replace any word started by "w" with "W"
+	echo 'sunday is a pleasent day' | sed -n '5!s/\bw/W/g'		#Means replace any word started by "w" with "W" but ignore line number 5 from this conversion
+	echi '                      hi' | sed 's/^[ ]*//'			#Means replace any number of space founded in the start of line with nothing 
