@@ -8,7 +8,7 @@ If your SSH is enabled in windows environment you can use SCP tool installed wit
 --SCP to multiple hosts
 'wincore2019_hd1','wincore2019_hd2','wincore2019_hd3' | % {scp E:\NTFSSecurity.zip lab\administrator@"$_":C:\Progra~1\WindowsPowerShell\Modules\NTFSSecurity.zip}
 
---SCP to single host
+--SCP to single host and copy all files and folders recursiviley
 scp -r <local file or folder> user@host:<target path>
 
 --SCP from Windows to Linux

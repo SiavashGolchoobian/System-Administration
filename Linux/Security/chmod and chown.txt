@@ -27,3 +27,6 @@ chown -R :<group> <path>			#Change ONLY Group ownership of a file/folder(<path>)
 chown -R <user> <path>				#Change ONLY User ownership of a file/folder(<path>) to newly <user>
 chown -R <user>:<group> <path>		#Change BOTH User and Group ownershipment of a file/folder(<path>) to newly <user> and <group>
 chown -R hadoop:hadoopgrp /home/hadoop
+
+--=====Change File/Folder Ownership(chgrp), this command is simpler version of chown
+chgrp <group> <path>				#Change ONLY Group ownership of a file/folder(<path>) to newly <group>

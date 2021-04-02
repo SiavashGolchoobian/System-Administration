@@ -1,0 +1,33 @@
+
+.------------------------------Registry(ex:hub.docker.com)------------------------------.
+|																						|
+|	.------Repository------.	.------Repository------.	.------Repository------.	|
+|	|		(fedora)		|	|		(mongodb)	   |	|	   (microsoft)	   |	|
+|	|						|	|					   |	|					   |	|
+|	|	-image a			|	|	-image x		   |	|	-image wincore	   |	|
+|	|	-image n			|	|	-image y		   |	|	-image sql		   |	|
+|	.-----------------------.	.----------------------.	.----------------------.	|
+|																						|
+.---------------------------------------------------------------------------------------.
+
+Image (Container Image): is like a Template machine in VM world.
+Container: Is an operational instance of our Image (Container Image), like a new Guest machine create from VM Template machine.
+Registry or Docker Hub: Is the official Docker registry (Repository) from Docker Inc (Company). Also many other registries(hubs) are existed like Quay.io
+Container Registries or Repositories: Are the enterprise IT App Store. Or in another word is a place (Inside the Repository) to store and retrive container images (It could contain private and public images and also each company can have it's own room in this palce).
+Index: An index tracks namespaces and docker repositories. For example, Docker Hub is a centralized index for public repositories
+Docker Swarm: Is a native docker clustering.
+Docker Universal Control Plane: Managing & Monitoring tools of On-Prem and Cloud based Dockers.
+Docker Machine: Provisions Docker hosts/engines.
+Docker Compose: Compose multi-container apps (app cluster).
+
+-----Commands:
+docker-compose -f docker-compose.yaml up: Create docker containers and config them as defined on docker-compose.yaml file.
+docker-compose -d -f docker-compose.yaml up: Create docker containers and config them as defined on docker-compose.yaml file, also do all things in background and return console control to you.
+docker-compose down: stoping and removing app clustre
+docker-compose down --volumes: stoping and removing app clustre and removing it's volumes
+docker-compose stop: stoping app cluster with out deleting them
+docker-compose run <ContainerName> <Any Command>: Run <Any Command> on container named <ContainerName> inside app cluster
+docker compose ps
+
+Source:
+	https://www.mssqltips.com/sqlservertip/5698/create-sql-server-on-windows-docker-container-using-dockerfile--part-6/

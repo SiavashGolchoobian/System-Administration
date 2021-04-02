@@ -18,7 +18,7 @@
 	sudo apt update
 6-Install Docker Engine (First using your VPN because of iran sanctions):
 	sudo apt-get update
-	sudo apt-get install docker-ce docker-ce-cli containerd.io
+	sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose
 7-Docker should now be installed, the daemon started, and the process enabled to start on boot. Check that it’s running:
 	sudo systemctl status docker
 
