@@ -90,7 +90,7 @@ pvresize(Expand lvm partition)
 ---------------
 pvresize <pv_path>
 pvresize /dev/sda
-pvresize /dev/sda3									#Exend pv to whole sda3 partition size
+pvresize /dev/sda3									#Extend pv to whole sda3 partition size
 
 vgdisplay
 ---------------
@@ -107,6 +107,12 @@ vgextend
 ---------------
 vgextend <vg_name> <pv_path>						#extend specified disk
 vgextend <vg_name> </dev/sda>						#extend specified disk
+
+lvdisplay
+---------------
+lvdisplay
+OR
+lvdisplay <lv_name>
 
 lvcreate
 ---------------

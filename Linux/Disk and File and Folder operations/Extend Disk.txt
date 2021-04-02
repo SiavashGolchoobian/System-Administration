@@ -1,0 +1,17 @@
+--Like fdisk but easier with wizard
+sudo cfdisk
+	select your target partition (like /dev/sda3)
+	select resize
+	set new size and enter (by default whole free space is used)
+	select write
+	type yes
+	type q
+sudo pvdisplay										#copy your target PV Name,sample "/dev/sda3"
+pvresize <PV NAME>									#Extend pv to whole sda3 partition size,sample:sudo pvresize /dev/sda3
+sudo vgdisplay										#copy your target VG Name,sample "ubuntu-vg"
+sudo vgextend <vg_name> <pv_path>					#extend specified disk,sample:sudo vgextend ubuntu-vg /dev/sda
+sudo lvdisplay										#copy your target LV Name,sample "ubuntu-lv"
+sudo lvextend -L +<size> <logical volume path>		#expand lv size to all remaining free space on vg,sample:sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+df -l												#Select your target mount point
+sudo xfs_growfs <mount point>						#Extend the File System,sample:sudo xfs_growfs /
+df -l 												#make sure your mount point free space is growed
