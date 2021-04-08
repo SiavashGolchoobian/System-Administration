@@ -21,11 +21,12 @@ Docker Machine: Provisions Docker hosts/engines.
 Docker Compose: Compose multi-container apps (app cluster).
 
 -----Commands:
-docker-compose -f docker-compose.yaml up: Create docker containers and config them as defined on docker-compose.yaml file.
+docker-compose -f docker-compose.yaml up: Create docker containers and config them as defined on docker-compose.yaml file,"-f" used to specify compose file.
 docker-compose -d -f docker-compose.yaml up: Create docker containers and config them as defined on docker-compose.yaml file, also do all things in background and return console control to you.
 docker-compose down: stoping and removing app clustre
 docker-compose down --volumes: stoping and removing app clustre and removing it's volumes
 docker-compose stop: stoping app cluster with out deleting them
+docker-compose start: start services
 docker-compose run <ContainerName> <Any Command>: Run <Any Command> on container named <ContainerName> inside app cluster
 docker compose ps
 
