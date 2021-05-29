@@ -1,0 +1,12 @@
+I search the ETL folder for .dtsx files. I look inside of files for a pattern matched as bellow.
+	Select-String -Path D:\Siavash\TFS\Razan\SaipaBI\03_ETL\*.dtsx -pattern 'DTS:DataType="8">FACT_Admissions</DTS:VariableValue>' -List
+
+I search the c:\fso folder for both .txt and .log files. I look inside both types of files for a pattern match of ed.
+	Select-String -Path c:\fso\*.txt, c:\fso\*.log -pattern ed
+	
+I search the .txt and the .log files for both ed and teresa strings.
+	Select-String -Path c:\fso\*.txt, c:\fso\*.log -pattern ed,teresa
+	
+--Source:
+https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string?view=powershell-7.1
+https://devblogs.microsoft.com/scripting/use-an-easy-powershell-command-to-search-files-for-information/

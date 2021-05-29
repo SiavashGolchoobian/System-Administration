@@ -1,0 +1,32 @@
+IP redirection
+Solution #1 (Route):
+	--Redirecting an IP address 172.10.10.10 to 172.20.20.20
+	STEP 01: Add new local route
+		route add 172.10.10.10 MASK 255.255.255.255 172.20.20.20
+	STEP 02: Use command route print to find out what IF value you need to use.
+		route print
+	STEP 03: Delete route
+		route delete 172.20.20.20
+		
+Solution #2 (netsh):
+	--Redirecting an IP address 172.10.10.10 to localhost
+	STEP 01: Get list of local adapters
+		netsh interface ipv4 show interfaces
+	STEP 02: Identify your loopback Idx (first column).
+	STEP 03: Exec bellow command and replace <IDX> with Idx identified in STEP 02 and replace <IP> with your original IP adreess(172.10.10.10 in this case)
+		netsh interface ip add addr <IDX> <IP>/32 st=ac sk=tr
+		netsh interface ip add addr 1 172.10.10.10/32 st=ac sk=tr
+
+    st=ac stands for store = active. This means the IP address you are adding to the loopback adapter will automatically disappear upon the next boot of the system. If you need to keep the changes, then change the argument to st=persistent.
+    sk=tr stands for skipassource = true. The man page reads: “skipassource: Do not use the address as source address for any outgoing packet unless explicitly specified. The default value is false.”
+    You can verify that it works by running a sniffer or from command line: tracert -d 172.10.10.10. You must see just one hop.
+	STEP 04:To delete the route
+		netsh int ip delete addr <IDX> <IP>
+		netsh int ip delete addr <1> <172.10.10.10>
+		
+Source:
+	https://superuser.com/questions/954665/how-to-redirect-route-ip-address-to-another-ip-address
+	https://www.computerhope.com/routehlp.htm
+	http://billykks.blogspot.com/2016/10/redirectroute-ip-adress-to-another-ip.html
+	https://serverfault.com/questions/712970/can-i-redirect-route-ip-adress-to-another-ip-address-windows
+	

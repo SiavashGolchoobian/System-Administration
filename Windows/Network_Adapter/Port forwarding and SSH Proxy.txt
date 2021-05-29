@@ -1,0 +1,71 @@
+Solution #1 (Good solutions for only TCP connections, not UDP):
+	Port forwarding via netsh:
+		In this examle assume you have a 
+			-SQL Server host named	SrvSql01 	with IP 	172.10.10.10
+			-Client machine named 	ClientPc01 	with IP 	172.50.10.11
+			-Middle tier host named	SrvMiddle01	with IP		172.20.10.15
+		Also in your organization you have bellow restrictions:
+			-Clients (172.50.x.x) does not allowed to connet to database server directly (untrust zone)
+			-Only Application servers and middle tier servers (Range 172.20.x.x) allowed to connect to database servers (172.10.x.x)
+			-Your SQL Server database server configured to listen on port 49149
+		Now you have some two tier applications (client/server) and you can't access those client directly to database servers zone because of security concerns and limitations, then you need a kind of middle tier server on Application server zone (172.20.x.x range) that play proxy server role for your clients, this middle tier server should forward sql server database requests from client to database servers and vice versa.
+		In this case you can use netsh capabilities to create a prxy server between clients and database server(s) to route traffic legally as bellow.	
+		
+		1-In middle tier server configure bellow settings:
+			A-IPv6 support must be enabled on the network interface for which the port forwarding rule is created.
+			B-Make sure that you have the iphlpsvc (IP Helper) service running on your middle tier server.
+			
+			These are the prerequisites for the correct operation of port forwarding. Without the IP Helper service and without IPv6 support enabled, the port redirection won’t work.
+			-To make port forwarding work on Windows Server 2003/XP, you must additionally set the IPEnableRouter parameter to 1 in the registry key HKLM\SYSTEM\ControlSet001\Services\Tcpip\Parameters.
+			
+		2-In middle tier server choose an unused port for client connections(sql server proxy port) and check that port to insure it is unused on middle tier server (172.20.10.15)
+		  For example in our case we use tcp port 1433 on middle tier and change our clients app connection string(s) to connect to 172.20.10.15,1433
+		  but at first step we should insure tcp 1433 port is unused in middle tier server via one of bellow commands:
+			netstat -ano | findstr :1433
+			#In cmd command, you should not see any result if port was free
+			OR
+			Test-NetConnection -ComputerName localhost -Port 1433
+			#In powershell command the "TcpTestSucceeded", should have "false" value, if port was free
+
+		3-After insuring 1433 is free on middle tier server, run bellow command (as administrator) to creating port forwarding rule on middle tier server
+			--Syntax:	
+			netsh interface portproxy add v4tov4 listenaddress=<localIpaddress OR localHostname> listenport=<localport> connectaddress=<destIpaddress OR DestHostname> connectport=<destport>
+			netsh interface portproxy add v4tov4 listenaddress=172.20.10.15 listenport=1433 connectaddress=172.10.10.10 connectport=49149
+			Note: 
+				Using the netsh interface portproxy add v4tov6/v6tov4/v6tov6 options, you can create port forwarding rules between IPv4 and IPv6 addresses.	
+
+		4-On middle tier server, set firewall rule to allow inbound connection on TCP port 1433
+		5-On middle tier server, use the netstat tool to check that Windows is now listening on port 1433:
+			netstat -ano | findstr :1433
+		6-Now you can connect via client machines (172.50.x.x) to middle tier server (172.20.10.15), and all of your client requests will be forwarded to 172.10.10.10:49149 via middle tier proxy server, also you dont have any restriction on SQL Server authentication mechanism.
+		7-To display a list of all active TCP port forwarding rules on Windows, run the command:
+			netsh interface portproxy show all
+		8-You can find out what process is listening on the specified port using its PID (in our example, the PID is 636):
+			tasklist | findstr 636
+		9-To remove a specific port forwarding rule on middle tier server run bellow command (as administrator):
+			netsh interface portproxy delete v4tov4 listenport=1433 listenaddress=172.20.10.15
+		10-Clear all current port forwarding rules:
+			netsh interface portproxy reset
+			
+Solution #2:
+	Port Forwarding via SSH:
+		1-Install Open SSH service on your middle tier server (also you should have a known local or domain user account on this server like "siavash")
+		2-On the middle tier server run bellow command
+			--via below command you will map/forward port 1433 on middle tier server to port 49149 on Sql Server database server
+			ssh -f saipacorp\siavash@SrvMiddle01 -L 1433:172.10.10.10:49149
+		3-On middle tier server, set firewall rules to allow inbound connection on TCP port 1433
+		4-Now from your client machine connect to middle tier server via ssh console but don't close your client ssh console and minimize it
+		5-from your client connect to port 1433 of middle tier server via SSMS or any other apps and you should routed to 49149 of SrvSql01 via ssh tunnel (Also if you does not allowed through firewall)
+		
+
+Note:
+	NAT and port forwarding are different, but they are often used in conjunction with each other.
+	NAT is network address translation. It translates traffic from one IP address to another. An example: NATing your WAN IP address 1.2.3.4 to your internal webserver 192.168.0.1.
+	Port forwarding (sometimes called PAT - Port Address Translation) is similar, but it functions on the port level.
+
+Source:
+	http://woshub.com/port-forwarding-in-windows/
+	http://woshub.com/ssh-tunnel-port-forward-windows/
+	https://serverfault.com/questions/888693/which-command-is-used-to-establish-ssh-tunnel-in-windows
+	https://medium.com/teamarimac/access-a-server-through-ssh-tunnel-and-send-api-requests-through-postman-in-windows-10-b7307974c1a0
+	https://www.programmersought.com/article/19424120132/
